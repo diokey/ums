@@ -8,7 +8,13 @@
     <ui:define name="title">
        	#{uiMessages.classCourses}
    	</ui:define>
-
+	
+	<ui:define name="jsFunction">
+		<h:form>
+			<p:remoteCommand name="treeNodeChanged" action="#{classCoursesBean.onClassChanged}" update=":classeCourseForm"></p:remoteCommand>
+		</h:form>
+	</ui:define>
+	
 	<ui:define name="breadcrumb">
 		<h:form>
 			<p:breadCrumb styleClass="fix-breadcrumb">
@@ -50,30 +56,33 @@
 	    				update="@form"></p:commandButton>
 	    			</p:outputPanel>	    			
 	    			<p:outputPanel layout="block">
-	    				<p:commandButton value="&lt;&lt;" title="Remove" update="@form"></p:commandButton>
+	    				<p:commandButton value="&lt;&lt;" id="removeBtn" disabled="#{empty classCoursesBean.selectedClassCourses}" process="@this" action="#{classCoursesBean.onClassCourseRemove}" 
+	    				title="Remove" update="@form"></p:commandButton>
 	    			</p:outputPanel>
 	    		</p:outputPanel>
 	    		<p:outputPanel styleClass="small-spiner">
 	    			<p:dataTable id="classCourses" var="classCourse" value="#{classCoursesBean.classCourses}" rowSelectMode="add" widgetVar="classCoursesTable"
-	    			sortBy="course.courseName" rowIndexVar="index" rowKey="#{classCourse.classCourseId}" selection="#{classCoursesBean.selectedClassCourses}">
+	    			rowIndexVar="index" rowKey="#{classCourse.classCourseId}" selection="#{classCoursesBean.selectedClassCourses}">
+	    				<p:ajax event="rowSelectCheckbox" update="@form"></p:ajax>
+	    				<p:ajax event="rowUnselectCheckbox" update="@form"></p:ajax>
 	    				<f:facet name="header">Courses in #{schoolTreeBean.selectedTreeNodeString}</f:facet>
 	    				<p:column selectionMode="multiple" style="width : 20px;"/>
 	    				<p:column headerText="Course" sortBy="course.courseName">
 	    					#{classCourse.course.courseName}
 	    				</p:column>
 	    				<p:column headerText="Hours" sortBy="hours" style="width:60px;">
-	    					<p:spinner style="width:40px" value="#{classCourse.hours}" min="0">
-	    						<p:ajax event="change" immediate="true" process="@this" listener="#{classCoursesBean.test(index)}"></p:ajax>
+	    					<p:spinner style="width:40px" value="#{classCourse.hours}" min="0" >
+	    						<p:ajax event="change" immediate="true" process="@this" listener="#{classCoursesBean.classCourseModified(index)}"></p:ajax>
 	    					</p:spinner>
 	    				</p:column>
 	    				<p:column headerText="Credits" sortBy="credits"  style="width:60px;">
 	    					<p:spinner style="width:40px;" value="#{classCourse.credits}" min="0" max="100">
-	    						<p:ajax event="change" immediate="true" process="@this" listener="#{classCoursesBean.test(index)}"></p:ajax>
+	    						<p:ajax event="change" immediate="true" process="@this" listener="#{classCoursesBean.classCourseModified(index)}"></p:ajax>
 	    					</p:spinner>
 	    				</p:column>
 	    				<p:column headerText="Course Description" sortBy="courseDescription">
 	    					<p:inputTextarea value="#{classCourse.courseDescription}" rows="1">
-	    						<p:ajax event="change" immediate="true" process="@this" listener="#{classCoursesBean.test(index)}"></p:ajax>
+	    						<p:ajax event="change" immediate="true" process="@this" listener="#{classCoursesBean.classCourseModified(index)}"></p:ajax>
 	    					</p:inputTextarea>
 	    				</p:column>
 	    			</p:dataTable>

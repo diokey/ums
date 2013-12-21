@@ -35,6 +35,12 @@
         	<ui:insert name="notity">
         		<p:growl id="messages" showDetail="true"></p:growl>
         	</ui:insert>
+        	
+        	<ui:insert name="jsFunction">
+        		<h:form>
+					<p:remoteCommand name="treeNodeChanged" update=":main-content"></p:remoteCommand>
+				</h:form>
+        	</ui:insert>
 			
             <p:layout fullPage="true">
 

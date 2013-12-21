@@ -20,7 +20,7 @@
           	
           	<p:tree id="school_tree" value="#{schoolTreeBean.root}" var="node"
           	animate="true" selectionMode="single" selection="#{schoolTreeBean.selectedNode}">
-          		<p:ajax event="select" listener="#{schoolTreeBean.nodeSelected}" update=":main-content"></p:ajax>           	           	
+          		<p:ajax event="select" listener="#{schoolTreeBean.nodeSelected}" oncomplete="treeNodeChanged()"></p:ajax>           	           	
        			<p:treeNode type="parent" expandedIcon="ui-icon ui-icon-folder-open" 
        			collapsedIcon="ui-icon ui-icon-folder-collapsed">  
 					<h:outputText value="#{node.title}" />  
