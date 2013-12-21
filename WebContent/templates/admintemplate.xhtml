@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">
+    
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <meta charset="utf-8"/>           
+            </f:facet>
+			<f:loadBundle basename="ui_messages_#{locale.selectedLanguage}" var="uiMessages"/>
+			<title><ui:insert name="title">International Leadership University</ui:insert></title>
+            <link type="text/css" rel="stylesheet" href="#{request.contextPath}/assets/css/default.css" />
+            
+            <style type="text/css">
+                .ui-layout-north {
+                    z-index:20 !important;
+                    overflow:visible !important;;
+                }
+
+                .ui-layout-north .ui-layout-unit-content {
+                    overflow:visible !important;
+                }
+            </style>
+        </h:head>
+
+        <h:body>
+        	
+        	<ui:insert name="notity">
+        		<p:growl id="messages" showDetail="true"></p:growl>
+        	</ui:insert>
+			
+            <p:layout fullPage="true">
+
+                <p:layoutUnit id="top" position="north" size="50">
+					<ui:insert name="mainMenu">
+						<ui:include src="/includes/adminMenu.xhtml" />
+					</ui:insert>
+                </p:layoutUnit>
+
+                <p:layoutUnit id="bottom" position="south" size="30" resizable="true">                	
+                	<ui:insert name="footer">
+                		<h:panelGroup layout="block" style="text-align:center;">
+                     		<a href="http://geek-solution.com"><strong>Geek Solution 2013</strong></a> - Leadership University
+                   		</h:panelGroup>
+                	</ui:insert>                	
+                    
+                </p:layoutUnit>
+
+                <p:layoutUnit id="left" position="west" size="300" resizable="true" closable="false" collapsible="true" header="UMS (University Management System)" minSize="200">
+                    <f:facet name="header">
+                    
+                    </f:facet>
+                    <ui:insert name="tree">
+                    	<ui:include src="/includes/school_tree.xhtml" />
+                    </ui:insert>                   
+                    
+                </p:layoutUnit>
+
+                <p:layoutUnit id="right" position="east" size="250" header="Options" resizable="true" closable="false" collapsible="true"
+                              style="text-align:center">
+
+                    <ui:insert name="righBlock">
+                    	<p:commandButton id="basic" value="Show Dialog" onclick="PF('dlg').show();" type="button" style="margin-top:10px"/>
+					</ui:insert>
+					
+                </p:layoutUnit>
+
+                <p:layoutUnit id="center" position="center">
+                    <ui:insert name="breadcrumb">                    
+                    </ui:insert>
+                   
+                   	<h:panelGroup layout="block" id="main-content">
+                   		<ui:insert name="main">
+                   		</ui:insert>
+                   	</h:panelGroup>
+                   
+                </p:layoutUnit>
+
+            </p:layout>
+
+            <p:dialog header="Basic Dialog" widgetVar="dlg" modal="true">
+                <h:outputText value="Resistance to PrimeFaces is futile!" />
+            </p:dialog>
+			<p:dialog id="add" header="#{schoolTreeBean.newStructure.id==0?'Add':'Edit'}" widgetVar="addDialog" closable="true" draggable="true" showEffect="slide" hideEffect="drop">  
+         		<h:form>
+	         		<h:panelGrid columns="2">
+	         			<h:outputText value="Title" />
+	         			<h:inputText value="#{schoolTreeBean.newStructure.title}" />
+	         			<h:outputText value="Description" />
+	         			<h:inputText value="#{schoolTreeBean.newStructure.description}" />
+	         			<h:outputLabel value="Is final?" />
+	         			<p:selectBooleanButton value="#{schoolTreeBean.newStructure.leaf}" onLabel="Yes"
+						offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" />
+	         		</h:panelGrid>
+         			<p:commandButton value="#{schoolTreeBean.newStructure.id==0?'Save':'Update'}" update=":tree_form,@form,:messages" action="#{schoolTreeBean.save}"></p:commandButton>
+    			</h:form>
+    		</p:dialog>
+    		
+    		<p:dialog id="addChild" header="Add Child of #{schoolTreeBean.selectedNodeData.title}" widgetVar="addChildDialog" closable="true" draggable="true" showEffect="slide" hideEffect="drop">  
+         		<h:form>
+	         		<h:panelGrid columns="2">
+	         			<h:outputText value="Title" />
+	         			<h:inputText value="#{schoolTreeBean.newStructure.title}" />
+	         			<h:outputText value="Description" />
+	         			<h:inputText value="#{schoolTreeBean.newStructure.description}" />
+	         			<h:outputLabel value="Is final?" />
+	         			<p:selectBooleanButton value="#{schoolTreeBean.newStructure.leaf}" onLabel="Yes"
+						offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" />
+	         		</h:panelGrid>
+         			<p:commandButton value="Save" update=":tree_form,@form" action="#{schoolTreeBean.saveChild}"></p:commandButton>
+    			</h:form>
+    		</p:dialog>
+    		
+    		<p:confirmDialog id="confirm_delete" widgetVar="confirmDelete" header="Confirm Deletion"
+    		message="Are you sure you want to delete #{schoolTreeBean.selectedNodeData.title}  #{empty schoolTreeBean.selectedNodeData.children?'':'And all it\'s children'}">
+    			
+    			<h:form>
+	    			<h:panelGroup layout="block" styleClass="center-text">
+		    			<p:commandButton value="No" type="button" onclick="PF('confirmDelete').hide()" icon="ui-icon-close">
+		    			</p:commandButton>
+		    			<p:commandButton value="Yes" actionListener="#{schoolTreeBean.deleteStructure}" 
+		    			update=":messages,:tree_form" oncomplete="PF('confirmDelete').hide()" icon="ui-icon-check">
+		    			</p:commandButton>
+	    			</h:panelGroup>
+    			</h:form>
+    		</p:confirmDialog>
+    		 
+        </h:body>
+
+    </f:view>
+    
+</html>

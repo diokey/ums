@@ -1,0 +1,88 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+            
+    <ui:define name="title">
+       	#{uiMessages.classCourses}
+   	</ui:define>
+
+	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem value="#{uiMessages.home}" url="/"/>
+				<p:menuitem value="#{uiMessages.courses}" url="/admin/courseCatalog.xhtml"/>
+				<p:menuitem value="#{uiMessages.classCourses}" url="#"></p:menuitem>
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>
+	
+    <ui:define name="main">
+    	<h:form id="classeCourseForm">
+    		<p:tooltip></p:tooltip>
+    		<h:panelGrid columns="3">
+	    		<h:panelGroup layout="block">	    			
+	    			<p:dataTable id="allCourses" var="course" value="#{classCoursesBean.allCourses}" rowKey="#{course.courseId}"
+	    			selection="#{classCoursesBean.selectedCourses}" rowSelectMode="add" widgetVar="allcourses"
+	    			sortBy="courseName" filteredValue="#{classCoursesBean.filteredCourses}">
+	    				<p:ajax event="rowSelectCheckbox" update="@form"></p:ajax>
+	    				<p:ajax event="rowUnselectCheckbox" update="@form"></p:ajax>
+	    				<f:facet name="header">
+	    					All university courses	    					
+    						<h:panelGrid columns="2" columnClasses="unbodered-panel,unbodered-panel">
+    							<p:outputLabel>Filter</p:outputLabel>
+    							<p:inputText id="globalFilter" onkeyup="PF('allcourses').filter()"></p:inputText>
+    						</h:panelGrid>						
+	    					
+	    				</f:facet>
+	    				<p:column selectionMode="multiple" style="width : 20px;"/> 
+	    				<p:column id="courseName" headerText="Course Name" sortBy="courseName"  filterBy="courseName"
+	    				filterStyle="display:none;">	    					
+	    					<h:outputText value="#{course.courseName}" title="#{course.courseDescription}"/>
+	    				</p:column>
+	    			</p:dataTable>
+	    		</h:panelGroup>
+	    		<p:outputPanel layout="block">
+	    			<p:outputPanel layout="block" id="addBtnPanel">
+	    				<p:commandButton value="&gt;&gt;" id="addBtn" disabled="#{empty classCoursesBean.selectedCourses}" process="@this"  title="Add" action="#{classCoursesBean.addCourses}"
+	    				update="@form"></p:commandButton>
+	    			</p:outputPanel>	    			
+	    			<p:outputPanel layout="block">
+	    				<p:commandButton value="&lt;&lt;" title="Remove" update="@form"></p:commandButton>
+	    			</p:outputPanel>
+	    		</p:outputPanel>
+	    		<p:outputPanel styleClass="small-spiner">
+	    			<p:dataTable id="classCourses" var="classCourse" value="#{classCoursesBean.classCourses}" rowSelectMode="add" widgetVar="classCoursesTable"
+	    			sortBy="course.courseName" rowIndexVar="index" rowKey="#{classCourse.classCourseId}" selection="#{classCoursesBean.selectedClassCourses}">
+	    				<f:facet name="header">Courses in #{schoolTreeBean.selectedTreeNodeString}</f:facet>
+	    				<p:column selectionMode="multiple" style="width : 20px;"/>
+	    				<p:column headerText="Course" sortBy="course.courseName">
+	    					#{classCourse.course.courseName}
+	    				</p:column>
+	    				<p:column headerText="Hours" sortBy="hours" style="width:60px;">
+	    					<p:spinner style="width:40px" value="#{classCourse.hours}" min="0">
+	    						<p:ajax event="change" immediate="true" process="@this" listener="#{classCoursesBean.test(index)}"></p:ajax>
+	    					</p:spinner>
+	    				</p:column>
+	    				<p:column headerText="Credits" sortBy="credits"  style="width:60px;">
+	    					<p:spinner style="width:40px;" value="#{classCourse.credits}" min="0" max="100">
+	    						<p:ajax event="change" immediate="true" process="@this" listener="#{classCoursesBean.test(index)}"></p:ajax>
+	    					</p:spinner>
+	    				</p:column>
+	    				<p:column headerText="Course Description" sortBy="courseDescription">
+	    					<p:inputTextarea value="#{classCourse.courseDescription}" rows="1">
+	    						<p:ajax event="change" immediate="true" process="@this" listener="#{classCoursesBean.test(index)}"></p:ajax>
+	    					</p:inputTextarea>
+	    				</p:column>
+	    			</p:dataTable>
+	    			<p:outputPanel layout="block" styleClass="center-text">
+	    				<p:commandButton value="Save" process="@form" immediate="true" action="#{classCoursesBean.saveSelectedCourses}"></p:commandButton>
+	    			</p:outputPanel>
+	    		</p:outputPanel>
+    		</h:panelGrid>
+    	</h:form>
+    	
+    </ui:define>
+</ui:composition>    

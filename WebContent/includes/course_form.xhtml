@@ -1,0 +1,20 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+	<p:panel id="coursePanel" styleClass="fix-parent-panel">
+			<h:form>				
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Course" />
+					<h:inputText value="#{courseBean.newCourse.courseName}" />
+					<h:outputLabel value="Description" />
+					<h:inputTextarea value="#{courseBean.newCourse.courseDescription}"/>
+				</h:panelGrid>
+				<h:panelGroup layout="block" styleClass="center-text">
+					<p:commandButton value="Save" actionListener="#{courseBean.saveCourse}" update=":messages,@form"></p:commandButton>
+				</h:panelGroup>
+			</h:form>			
+	</p:panel>
+</ui:composition>

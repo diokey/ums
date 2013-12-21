@@ -1,0 +1,128 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="title">
+       	#{uiMessages.studentRegistration}
+   	</ui:define>
+
+	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem value="#{uiMessages.home}" url="/"/>
+				<p:menuitem value="#{uiMessages.students}" url="/admin/students.xhtml"/>
+				<p:menuitem value="#{uiMessages.studentRegistration}" />
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>
+	
+    <ui:define name="main">
+    	<h:form>	    	
+   		<p:accordionPanel widgetVar="formAccordion">
+   			<p:tab title="#{uiMessages.contactInfos}">
+   				<h:panelGrid columns="3">
+   					<p:outputLabel for="firstName" value="#{uiMessages.firstName}" />
+   					<p:inputText id="firstName" value="#{registrationBean.newStudent.name}" required="true" 
+   					requiredMessage="#{uiMessages.fieldRequired}"/>
+   					<p:message for="firstName"></p:message>
+   					
+   					<p:outputLabel for="middleName" value="#{uiMessages.middleName}" />
+   					<p:inputText id="middleName" value="#{registrationBean.newStudent.middleName}" />
+   					<p:message for="middleName"></p:message>
+   					
+   					<p:outputLabel for="lastName" value="#{uiMessages.lastName}" />
+   					<p:inputText id="lastName" value="#{registrationBean.newStudent.lastName}" />
+   					<p:message for="lastName"></p:message>
+   					
+   					<p:outputLabel value="#{uiMessages.gender}" for="gender"/>
+   					<p:selectOneRadio id="gender" value="#{registrationBean.newStudent.gender}">
+   						<f:selectItem itemValue="Male" itemLabel="Male"/>
+   						<f:selectItem itemValue="Female" itemLabel="Female"/>
+   					</p:selectOneRadio>
+   					<p:message for="gender"></p:message>
+   					
+   					<p:outputLabel value="#{uiMessages.birthdate}" for="birthdate"/>
+   					<p:calendar id="birthdate" value="#{registrationBean.newStudent.birthDate}" pattern="mm-dd-yyyy"></p:calendar>
+   					<p:message for="birthdate"></p:message>
+   					
+   					<p:outputLabel value="#{uiMessages.nationality}" for="nationality"/>
+   					<p:inputText value="#{registrationBean.newStudent.nationality}" id="nationality"/>
+   					<p:message for="nationality"></p:message>
+   					
+   					<p:outputLabel value="#{uiMessages.bloodGroup}" for="bloodGroup"/>
+   					<p:selectOneMenu value="#{registrationBean.newStudent.bloodGroup}" id="bloodGroup">
+   						<f:selectItem itemLabel="Unknown" itemValue="" />
+   						<f:selectItem itemLabel="A+" itemValue="A+" />
+   						<f:selectItem itemLabel="A-" itemValue="A-" />
+   						<f:selectItem itemLabel="B+" itemValue="B+" />
+   						<f:selectItem itemLabel="B-" itemValue="B-" />
+   						<f:selectItem itemLabel="O+" itemValue="O+" />
+   					</p:selectOneMenu>
+   					<p:message for="bloodGroup"></p:message>
+   					
+   					<p:outputLabel value="#{uiMessages.maritalStatus}" for="maritalStatus"/>
+   					<p:selectOneMenu value="#{registrationBean.newStudent.maritalStatus}" id="maritalStatus">
+   						<f:selectItem itemLabel="Unknown" itemValue="" />
+   						<f:selectItem itemLabel="Single" itemValue="Single" />
+   						<f:selectItem itemLabel="Married" itemValue="Married" />
+   						<f:selectItem itemLabel="Divorced" itemValue="Divorced" />
+   						<f:selectItem itemLabel="Widow" itemValue="Window" />
+   					</p:selectOneMenu>
+   					<p:message for="maritalStatus"></p:message>
+   				</h:panelGrid>
+   			</p:tab>
+   			<p:tab title="#{uiMessages.adress}">
+   				<h:panelGrid columns="2">
+   					<p:outputLabel for="country" value="#{uiMessages.country}" />
+   					<p:inputText id="country" value="#{registrationBean.newStudent.country}"></p:inputText>
+   					<p:outputLabel value="#{uiMessages.city}" for="city"/>
+					<p:inputText id="city" value="#{registrationBean.newStudent.city}"></p:inputText>
+					<p:outputLabel value="#{uiMessages.adress}" for="adress"/>
+   					<p:inputText id="adress" value="#{registrationBean.newStudent.adress}"></p:inputText>
+   				</h:panelGrid>
+   			</p:tab>
+   			<p:tab title="#{uiMessages.contactInfos}">
+   				<h:panelGrid columns="2">
+   					<p:outputLabel value="#{uiMessages.tel} 1" />
+   					<p:inputText value="#{registrationBean.newStudent.tel1}" />
+   					<p:outputLabel value="#{uiMessages.tel} 2" />
+   					<p:inputText value="#{registrationBean.newStudent.tel2}" />
+   					<p:outputLabel value="Email" for="email"/>
+   					<p:inputText id="email" value="#{registrationBean.newStudent.email}" />
+   					<p:outputLabel value="Skype" for="skype"/>
+   					<p:inputText value="#{registrationBean.newStudent.skype}" id="skype" />
+   					
+   				</h:panelGrid>
+   			</p:tab>
+   			<p:tab title="#{uiMessages.loginInfos}">
+   				<h:panelGrid columns="2">
+   					<p:outputLabel for="username" value="#{uiMessages.username}" />
+   					<p:inputText id="username" value="#{registrationBean.newUser.username}" />
+   					<h:outputText value="#{uiMessages.password}" />
+   					<p:inputText value="#{registrationBean.newUser.userPassword}" />
+   					<p:selectBooleanCheckbox value="#{registrationBean.newUser.active}">
+   						<f:selectItem itemValue="#{uiMessages.access}"/>
+   					</p:selectBooleanCheckbox>
+   					<p:outputLabel value="Give access to use the application to this students"></p:outputLabel>
+   				</h:panelGrid>
+   			</p:tab>
+   			
+   		</p:accordionPanel>   		
+   		<p:spacer></p:spacer>
+   		<p:panel>
+   			<p:selectBooleanCheckbox disabled="#{empty schoolTreeBean.selectedTreeNodeString}" value="#{registrationBean.enroll}"></p:selectBooleanCheckbox>
+			<p:outputLabel  escape="false" value=" Enroll student in "></p:outputLabel>	
+			<b>#{schoolTreeBean.selectedTreeNodeString}</b>			
+		</p:panel>
+		<p:spacer></p:spacer>
+		<h:panelGroup layout="block" styleClass="center-text">
+			<p:commandButton value="Cancel" type="reset"></p:commandButton>
+			<p:commandButton value="Save" action="#{registrationBean.saveStudent}" update="@form,:messages"></p:commandButton>
+		</h:panelGroup>   	
+    	</h:form>
+    </ui:define>
+    
+</ui:composition>

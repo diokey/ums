@@ -1,0 +1,81 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="title">
+       	Course Catalog
+   	</ui:define>
+
+	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem label="Home" url="/"/>
+				<p:menuitem value="Course catalog" />
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>
+	
+    <ui:define name="main">    		        
+		<ui:include src="/includes/course_form.xhtml" />	
+		<p:spacer></p:spacer>
+		
+		<p:outputPanel>
+			<h:form>
+			<p:dataTable value="#{courseBean.courseList}" widgetVar="courseTable" var="course" rows="15" paginator="true" resizableColumns="true"
+			 rowKey="#{course.courseId}" emptyMessage="No course found" filteredValue="#{courseBean.filteredCourses}" 
+			 sortBy="courseName" selection="#{courseBean.selectedCourses}" editable="true" scrollable="true" scrollHeight="300">
+				<f:facet name="header">
+					Course List  
+		            <p:outputPanel style="float:right">  
+		                <h:outputText value="Search all fields:" />  
+		                <p:inputText id="globalFilter" onkeyup="PF('courseTable').filter()" style="width:150px" />  
+		            </p:outputPanel>
+		            <div style="clear:both;"></div>  
+        		</f:facet>
+				<p:column selectionMode="multiple" style="width : 20px;"/> 
+				<p:column id="courseName" sortBy="courseName" filterStyle="display:none" filterBy="courseName">
+					<f:facet name="header">
+						<h:outputText value="Course name" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="input">
+							<h:inputText value="#{course.courseName}" />
+						</f:facet>
+						<f:facet name="output">
+							<h:outputText value="#{course.courseName}" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				<p:column id="courseDescription" sortBy="courseDescription" filterStyle="display:none" filterBy="courseDescription">
+					<f:facet name="header">
+						<h:outputText value="Course Description" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="#{course.courseDescription}" />	
+						</f:facet>
+						<f:facet name="input">
+							<h:inputText value="#{course.courseDescription}" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				<p:column>  
+            		<p:rowEditor />  
+        		</p:column>
+        		<p:column>  
+            		<p:commandLink><span class="ui-icon ui-icon-trash" title="Delete"></span></p:commandLink>  
+        		</p:column>
+        		
+				<f:facet name="footer">
+					All university courses
+				</f:facet>
+			</p:dataTable>
+			</h:form>	
+		</p:outputPanel>		
+		
+    </ui:define>
+						 
+</ui:composition>

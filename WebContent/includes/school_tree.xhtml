@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      
+      
+      <h:form id="tree_form">
+          	<p:growl id="messages" showDetail="true"></p:growl>
+          	<p:selectOneMenu value="#{schoolTreeBean.selectedSchool.schoolId}">
+          		<f:selectItems value="#{schoolTreeBean.schools}" var="school" itemValue="#{school.schoolId}" itemLabel="#{school.title}"/>
+          	</p:selectOneMenu>
+          	<p:selectOneMenu value="#{schoolTreeBean.selectedSchoolYear.schoolYearId}">
+          		<f:selectItems value="#{schoolTreeBean.schoolYears}" var="schoolYear" itemValue="#{schoolYear.schoolYearId}" itemLabel="#{schoolYear.schoolYearTitle}"/>
+          	</p:selectOneMenu>          	
+      		<p:selectOneMenu value="#{schoolTreeBean.selectedSchoolPeriod.schoolPeriodId}">
+      			<f:selectItems value="#{schoolTreeBean.schoolPeriods}" var="schoolPeriod" itemValue="#{schoolPeriod.schoolPeriodId}" itemLabel="#{schoolPeriod.period}"/>
+      		</p:selectOneMenu>
+          	
+          	<p:tree id="school_tree" value="#{schoolTreeBean.root}" var="node"
+          	animate="true" selectionMode="single" selection="#{schoolTreeBean.selectedNode}">
+          		<p:ajax event="select" listener="#{schoolTreeBean.nodeSelected}" update=":main-content"></p:ajax>           	           	
+       			<p:treeNode type="parent" expandedIcon="ui-icon ui-icon-folder-open" 
+       			collapsedIcon="ui-icon ui-icon-folder-collapsed">  
+					<h:outputText value="#{node.title}" />  
+				</p:treeNode>
+				<p:treeNode type="leaf" icon="ui-icon ui-icon-document">  
+					<h:outputText value="#{node.title}" />  
+				</p:treeNode>  	                   	                  	 
+
+          	</p:tree>
+          	<p:contextMenu for="school_tree" nodeType="parent">
+           	<p:menuitem value="Add node" icon="ui-icon-plus" update=":add" actionListener="#{schoolTreeBean.onAddContextMenu}"
+           	oncomplete="PF('addDialog').show()"/>
+         	<p:menuitem value="Add child node" icon="ui-icon-add" update=":addChild" actionListener="#{schoolTreeBean.onAddChildContextMenu}"
+         	oncomplete="PF('addChildDialog').show()"/>
+         	<p:menuitem value="Edit" icon="ui-icon-search" update=":add" actionListener="#{schoolTreeBean.onEditContextMenu}" 
+         	oncomplete="PF('addDialog').show()" />  
+			<p:menuitem value="Delete" icon="ui-icon-close" update=":confirm_delete" actionListener="#{schoolTreeBean.onAddContextMenu}" 
+			oncomplete="PF('confirmDelete').show()" />  
+  			</p:contextMenu>
+  			
+  			<p:contextMenu for="school_tree" nodeType="leaf">
+           	<p:menuitem value="Add node" icon="ui-icon-plus" update=":add" actionListener="#{schoolTreeBean.onAddContextMenu}"
+           	oncomplete="PF('addDialog').show()"/>
+         	
+         	<p:menuitem value="Edit" icon="ui-icon-search" update=":add" actionListener="#{schoolTreeBean.onEditContextMenu}" 
+         	oncomplete="PF('addDialog').show()" />  
+			<p:menuitem value="Delete" icon="ui-icon-close" update=":confirm_delete" actionListener="#{schoolTreeBean.onAddContextMenu}" 
+			oncomplete="PF('confirmDelete').show()" />  
+  			</p:contextMenu>
+             	
+     </h:form>
+
+</ui:composition>
