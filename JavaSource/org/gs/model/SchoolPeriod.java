@@ -62,10 +62,20 @@ public class SchoolPeriod {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
+	
+	public SchoolYear getSchoolYear() {
+		return schoolYear;
+	}
+
+	public void setSchoolYear(SchoolYear schoolYear) {
+		this.schoolYear = schoolYear;
+	}
+
 
 
 	private int schoolPeriodId;
 	private int schoolYearId;
+	private SchoolYear schoolYear;
 	private String period;
 	private String periodDescription;
 	private Date startDate;

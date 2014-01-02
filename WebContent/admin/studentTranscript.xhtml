@@ -1,0 +1,85 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="title">
+       	#{uiMessages.studentMarks}
+   	</ui:define>
+   	
+   	<ui:define name="jsFunction">
+		<h:form>
+			<p:remoteCommand name="treeNodeChanged" action="#{studentTranscriptBean.onNodeChanged}"
+			update=":studentTranscriptForm"></p:remoteCommand>
+		</h:form>
+	</ui:define>
+   	
+   	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem value="#{uiMessages.home}" url="/"/>
+				<p:menuitem value="#{uiMessages.students}" url="/admin/students.xhtml"/>
+				<p:menuitem value="#{uiMessages.studentTranscript}"></p:menuitem>
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>
+	
+    <ui:define name="main">
+    	<h:form id="studentTranscriptForm">
+    		<p:panel styleClass="fix-parent-panel">
+    			<h:panelGrid columns="2">
+    				<h:outputLabel value="Student" for="student"/>
+	    			<p:selectOneMenu id="student" valueChangeListener="#{studentTranscriptBean.onStudentChanged}">
+	    				<f:selectItems value="#{studentTranscriptBean.registrations}" var="registration" 
+	    				itemLabel="#{registration.student.name} #{registration.student.middleName} #{registration.student.lastName}"
+	    				itemValue="#{registration.registrationId}"/>
+	    				<p:ajax event="change" update="transcripts"></p:ajax>
+	    			</p:selectOneMenu>
+    			</h:panelGrid>
+    			
+    		</p:panel>
+    		
+    		<p:outputPanel id="transcripts">
+    			<ui:repeat var="transcript" value="#{studentTranscriptBean.studentRegistration}">
+	    			<p:fieldset legend="#{transcript.period.period}">    			
+	    				<p:dataTable id="notes" value="#{transcript.notes}" var="studentsGrade" styleClass="fix-parent-panel" 
+		    		 		>		    				
+			    			<p:column>
+			    				<f:facet name="header">Course</f:facet>
+			    				#{studentsGrade.classCourse.course.courseName}
+			    			</p:column>
+		    			
+			    			<p:column>
+			    				<f:facet name="header">Hours</f:facet>
+			    				#{studentsGrade.hoursTaken}
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">Grad</f:facet>
+			    				#{studentsGrade.grad}
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">Graded</f:facet>
+			    				#{studentsGrade.graded}		
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">Grade</f:facet>
+			    				#{studentsGrade.grade} 				
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">GP</f:facet>
+			    				#{studentsGrade.gp}			
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">GPA</f:facet>
+			    				#{studentsGrade.gpa}		
+			    			</p:column>
+		    			</p:dataTable>
+	    			</p:fieldset>
+    			</ui:repeat>
+    		</p:outputPanel>
+    		   		
+    	</h:form>
+    </ui:define>
+</ui:composition>

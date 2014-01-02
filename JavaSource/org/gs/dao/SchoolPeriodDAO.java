@@ -57,6 +57,7 @@ public class SchoolPeriodDAO extends DAO<SchoolPeriod> {
 				sp = new SchoolPeriod();
 				sp.setSchoolPeriodId(res.getInt("school_period_id"));
 				sp.setSchoolYearId(res.getInt("school_year_id"));
+				sp.setSchoolYear(new SchoolYearDAO().find(sp.getSchoolYearId()));
 				sp.setPeriod(res.getString("period"));
 				sp.setPeriodDescription(res.getString("period_description"));
 				sp.setStartDate(res.getDate("start_date"));
@@ -91,7 +92,7 @@ public class SchoolPeriodDAO extends DAO<SchoolPeriod> {
 		ResultSet res = null;
 		PreparedStatement pst = null;
 		
-		String sql = "SELECT school_period_id FROM school_period where school_year_id = ?";
+		String sql = "SELECT * FROM school_period where school_year_id = ?";
 				
 		
 		try {
@@ -100,7 +101,18 @@ public class SchoolPeriodDAO extends DAO<SchoolPeriod> {
 			res = pst.executeQuery();
 			
 			while(res.next()) {
-				periods.add(this.find(res.getInt("school_period_id")));
+				SchoolPeriod sp = new SchoolPeriod();
+				sp.setSchoolPeriodId(res.getInt("school_period_id"));
+				sp.setSchoolYearId(res.getInt("school_year_id"));
+				sp.setPeriod(res.getString("period"));
+				sp.setPeriodDescription(res.getString("period_description"));
+				sp.setStartDate(res.getDate("start_date"));
+				sp.setEndDate(res.getDate("end_date"));
+				sp.setCreatedOn(res.getDate("created_on"));
+				sp.setCreatedBy(res.getInt("created_by"));
+				sp.setDeleted(res.getBoolean("deleted"));
+				
+				periods.add(sp);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

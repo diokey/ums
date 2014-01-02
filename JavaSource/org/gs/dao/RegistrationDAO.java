@@ -9,6 +9,9 @@ import java.util.List;
 
 import org.gs.db.SingletonConnection;
 import org.gs.model.Registration;
+import org.gs.model.SchoolPeriod;
+import org.gs.model.SchoolYear;
+import org.gs.model.Transcript;
 
 public class RegistrationDAO extends DAO<Registration> {
 
@@ -88,8 +91,10 @@ public class RegistrationDAO extends DAO<Registration> {
 				registration.setRegistrationId(res.getInt("registration_id"));
 				registration.setStudentId(res.getInt("student_id"));
 				registration.setStudent(new StudentDAO().find(registration.getStudentId()));
+				registration.setNotes(new TranscriptDAO().registrationTranscript(res.getInt("registration_id")));
 				registration.setClassId(res.getInt("class_id"));
 				registration.setPeriodId(res.getInt("period_id"));
+				registration.setPeriod(new SchoolPeriodDAO().find(registration.getPeriodId()));
 				registration.setComment(res.getString("comment"));
 				registration.setCreatedOn(res.getDate("created_on"));
 				registration.setModifiedOn(res.getDate("modified_on"));
@@ -150,6 +155,65 @@ public class RegistrationDAO extends DAO<Registration> {
 		}
 		
 		return registrations;
+	}
+	
+	public List<Registration> studentRegistration(int studentId) {
+		
+		List<Registration> registrations = new ArrayList<Registration>();
+		
+		String sql = "SELECT registration_id from registration where student_id=?";
+		
+		ResultSet res = null;
+		PreparedStatement pst = null;
+		
+		try {
+			pst = this.con.prepareStatement(sql);
+			pst.setInt(1, studentId);
+		
+			res = pst.executeQuery();
+			
+			while(res.next()) {
+				Registration r = this.find(res.getInt("registration_id"));
+				
+				registrations.add(r);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return registrations;
+	}
+	
+	public static void main(String args[]) {
+		List<Registration> t = new RegistrationDAO().studentRegistration(8);
+				
+		for(Registration r : t) {
+			SchoolPeriod sp = r.getPeriod();
+			
+			SchoolYear sy = sp.getSchoolYear();
+			
+			List<Transcript> transcript = r.getNotes();
+			
+			
+			for(Transcript tra : transcript) {
+				System.out.println(" grade "+tra.getGrade());
+			}
+			
+			System.out.println("School Period : "+sy.getSchoolYearTitle());
+		}
+		
 	}
 
 }

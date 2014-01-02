@@ -1,6 +1,7 @@
 package org.gs.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -44,7 +45,49 @@ public class SchoolDAO extends DAO<School> {
 	@Override
 	public School find(int id) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		School s = null;
+		
+		String req = "SELECT * FROM school where school_id=?";
+		
+		ResultSet res = null;
+		PreparedStatement statement = null;
+		
+		try {
+			statement = this.con.prepareStatement(req);
+			
+			statement.setInt(1, id);
+			
+			res = statement.executeQuery(req);
+			
+			while(res.next()) {
+				s = new School();
+				s.setSchoolId(res.getInt("school_id"));
+				s.setTitle(res.getString("title"));
+				s.setAdress(res.getString("adress"));
+				s.setPhone(res.getString("phone"));
+				s.setPrincipal(res.getString("principal"));
+				s.setEmail(res.getString("email"));
+				s.setSchoolYears(new SchoolYearDAO().findBySchool(s.getSchoolId()));
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				statement.close();
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		return s;
 	}
 	
 	public List<School> findAll() {

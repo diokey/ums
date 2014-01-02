@@ -117,6 +117,8 @@ public class StudentMarkBean {
 		
 		this.init();
 	}
+	
+	
 	public void onStudentChanged(ValueChangeEvent event) {
 		if(event==null || event.getNewValue()==null)
 			return;

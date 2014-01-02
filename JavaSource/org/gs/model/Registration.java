@@ -1,6 +1,7 @@
 package org.gs.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Registration {
 
@@ -67,16 +68,35 @@ public class Registration {
 		this.student = student;
 	}
 
+	public List<Transcript> getNotes() {
+		return notes;
+	}
+
+	public void setNotes(List<Transcript> notes) {
+		this.notes = notes;
+	}
+
+	public SchoolPeriod getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(SchoolPeriod period) {
+		this.period = period;
+	}
+
+
 
 
 
 	private int registrationId;
 	private int classId;
 	private int periodId;
+	private SchoolPeriod period;
 	private int studentId;
 	private Student student;
 	private String comment;
 	private Date createdOn;
 	private Date modifiedOn;
 	private boolean deleted;
+	private List<Transcript> notes;
 }

@@ -127,6 +127,7 @@ public class TranscriptDAO extends DAO<Transcript>{
 				tr = new Transcript();
 				tr.setTranscriptId(res.getInt("transcript_id"));
 				tr.setClassCourseId(res.getInt("class_course_id"));
+				tr.setRegistrationId(res.getInt("registration_id"));
 				tr.setHoursTaken(res.getInt("hours_taken"));
 				tr.setGrad(res.getInt("grad"));
 				tr.setGraded(res.getInt("graded"));
@@ -305,6 +306,59 @@ public class TranscriptDAO extends DAO<Transcript>{
 		return transcriptList;
 	}
 	
+	public List<Transcript> registrationTranscript(int registrationId) {
+		List<Transcript> transcripts = new ArrayList<Transcript>();
+		
+		String req = "SELECT * FROM transcript_detail where registration_id=?";
+		//System.out.println("SELECT * FROM transcript_detail where registration_id="+registrationId);
+		
+		PreparedStatement pst = null;
+		ResultSet res = null;
+		
+		try {
+			pst = this.con.prepareStatement(req);
+			pst.setInt(1, registrationId);
+			
+			res = pst.executeQuery();
+			
+			while(res.next()) {
+				Transcript tr = new Transcript();
+				tr.setTranscriptId(res.getInt("transcript_detail_id"));
+				tr.setRegistrationId(res.getInt("registration_id"));
+				tr.setClassCourseId(res.getInt("class_course_id"));
+				tr.setClassCourse(new ClassCourseDAO().find(res.getInt("class_course_id")));
+				tr.setHoursTaken(res.getInt("hours_taken"));
+				tr.setGrad(res.getInt("grad"));
+				tr.setGraded(res.getInt("graded"));
+				tr.setGrade(res.getString("grade"));
+				tr.setGp(res.getFloat("gp"));
+				tr.setGpa(res.getFloat("gpa"));
+				tr.setCreatedOn(res.getDate("created_on"));
+				tr.setModifiedOn(res.getDate("modified_on"));
+				tr.setCreatedBy(res.getInt("created_by"));
+				tr.setModifiedBy(res.getInt("modified_by"));
+				tr.setDeleted(res.getBoolean("deleted"));
+				
+				transcripts.add(tr);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return transcripts;
+	}
+	
 	public boolean transcriptGenerated(int registrationId) {
 		boolean rep = false;
 		
@@ -378,5 +432,6 @@ public class TranscriptDAO extends DAO<Transcript>{
 		
 		return rep;
 	}
-
+	
+	
 }
