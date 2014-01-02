@@ -1,7 +1,15 @@
 package org.gs.model;
 
-public class User {
+import java.io.Serializable;
 
+public class User implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
 	public User() {
 		// TODO Auto-generated constructor stub
 	}

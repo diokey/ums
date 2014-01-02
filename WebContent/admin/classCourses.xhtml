@@ -87,7 +87,7 @@
 	    				</p:column>
 	    			</p:dataTable>
 	    			<p:outputPanel layout="block" styleClass="center-text">
-	    				<p:commandButton value="Save" process="@form" immediate="true" action="#{classCoursesBean.saveSelectedCourses}"></p:commandButton>
+	    				<p:commandButton value="Save" process="@form" update="@form,:messages" immediate="true" action="#{classCoursesBean.saveSelectedCourses}"></p:commandButton>
 	    			</p:outputPanel>
 	    		</p:outputPanel>
     		</h:panelGrid>

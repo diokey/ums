@@ -1,0 +1,167 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+              
+    <ui:define name="title">
+       	#{uiMessages.studentMarks}
+   	</ui:define>
+   	
+   	<ui:define name="jsFunction">
+		<h:form>
+			<p:remoteCommand name="treeNodeChanged" action="#{studentMarkBean.onClassChanged}" update=":studentMarkForm"></p:remoteCommand>
+		</h:form>
+	</ui:define>
+   	
+   	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem value="#{uiMessages.home}" url="/"/>
+				<p:menuitem value="#{uiMessages.students}" url="/admin/students.xhtml"/>
+				<p:menuitem value="#{uiMessages.studentMarks}"></p:menuitem>
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>
+	
+    <ui:define name="main">
+    	<h:form id="studentMarkForm">
+    		<p:panel styleClass="fix-parent-panel">
+    			<h:panelGrid columns="2">
+    				<h:outputLabel value="Student" for="student"/>
+	    			<p:selectOneMenu id="student" valueChangeListener="#{studentMarkBean.onStudentChanged}">
+	    				<f:selectItems value="#{studentMarkBean.registrations}" var="registration" 
+	    				itemLabel="#{registration.student.name} #{registration.student.middleName} #{registration.student.lastName}"
+	    				itemValue="#{registration.registrationId}"/>
+	    				<p:ajax event="change" update="notes"></p:ajax>
+	    			</p:selectOneMenu>
+    			</h:panelGrid>
+    			
+    		</p:panel>
+    		
+    		<p:dataTable id="notes" value="#{studentMarkBean.studentMarks}" var="studentsGrade" styleClass="fix-parent-panel" 
+    		 rowKey="#{studentsGrade.transcriptId}" rowIndexVar="index">
+    			<f:facet name="header">Student's grade point</f:facet>
+    			
+    			<p:column headerText="Course">
+    				#{studentsGrade.classCourse.course.courseName}
+    			</p:column>
+    			
+    			<p:column headerText="Hours taken">
+    				#{studentsGrade.hoursTaken}
+    			</p:column>
+    			<p:column headerText="Grad">
+    				#{studentsGrade.grad}
+    			</p:column>
+    			<p:column headerText="Graded">
+    				<p:inputText value="#{studentsGrade.graded}" size="5">
+    					<p:ajax event="change"></p:ajax>
+    				</p:inputText>    				
+    			</p:column>
+    			<p:column headerText="Grade">    				
+    				<p:selectOneMenu value="#{studentsGrade.grade}" disabled="#{studentMarkBean.transcriptGenerated}">
+    					<f:selectItem itemLabel="" itemValue=""/>
+    					<f:selectItems value="#{studentMarkBean.grades}" var="grade" 
+    					itemLabel="#{grade.letterCode}" itemValue="#{grade.letterCode}"
+    					itemDescription="#{grade.levelAchievement}"/>
+    					<p:ajax event="change" process="@this" update="gp,gpa" listener="#{studentMarkBean.assignGrade(index)}">    						
+    					</p:ajax>
+    				</p:selectOneMenu>
+    			</p:column>
+    			<p:column headerText="GP">
+    				<p:inputText id="gp" value="#{studentsGrade.gp}" size="5" disabled="#{studentMarkBean.transcriptGenerated}">
+    					<p:ajax event="change"></p:ajax>
+    				</p:inputText>    				
+    			</p:column>
+    			<p:column headerText="GPA">
+    				<p:inputText id="gpa" value="#{studentsGrade.gpa}" size="5" disabled="#{studentMarkBean.transcriptGenerated}">
+    					<p:ajax event="change"></p:ajax>
+    				</p:inputText>    				
+    			</p:column>
+    		</p:dataTable>
+    		<p:outputPanel layout="block" styleClass="center-text">
+    			<p:commandButton value="Save" action="#{studentMarkBean.saveNotes}" immediate="true" update=":messages"></p:commandButton>
+    			<p:commandButton value="Transcript" action="#{studentMarkBean.generateTranscript}" update=":studentMarkForm:notes,:transcript" oncomplete="PF('transcriptdlg').show();"></p:commandButton>
+    		</p:outputPanel>
+    	</h:form>
+    	
+    	
+    	<p:dialog id="transcriptDialog" widgetVar="transcriptdlg" resizable="false">  
+		      
+		  		<p:outputPanel layout="block" id="transcript">
+		  		<p class="center-text bold">INTERNATIONAL LEADERSHIP UNIVERSITY - BURUNDI</p>
+		  		<p class="center-text bold">670b2/A Yaranda Boulevard, Rohero 1, P.O Box 2330, Bujumbura</p>
+		  		
+		  		<div class="warning-transcript">
+		  			<p style="padding:6px">Note : Official transcripts mush have ILU seal on each page to be considered officail</p>
+		  		</div>
+		  		
+		  		
+		        <h:panelGrid columns="2" rowClasses="align-top" columnClasses="studentInfo,schoolInfo" style="width:100%;margin-bottom:10px;">  
+		            <h:panelGrid columns="2" style="width:100%;">
+		            	<h:outputText styleClass="bold" value="Student ID" />
+			  			<h:outputText value="00-00-0110" />
+			  			<h:outputText styleClass="bold" value="Student name" />
+			  			<h:outputText value="#{studentMarkBean.selectedRegistration.student.name} #{studentMarkBean.selectedRegistration.student.middleName} #{studentMarkBean.selectedRegistration.student.lastName}" />
+			  			<h:outputText styleClass="bold" value="Birth Date" />
+			  			<h:outputText value="#{studentMarkBean.selectedRegistration.student.birthDate}" />
+			  			<h:outputText styleClass="bold" value="Gender" />
+			  			<h:outputText value="#{studentMarkBean.selectedRegistration.student.gender}" />
+			  			<h:outputText styleClass="bold" value="Nationality" />
+			  			<h:outputText value="#{studentMarkBean.selectedRegistration.student.nationality}" />
+		            </h:panelGrid>
+		            <h:panelGrid columns="2" style="width:100%;">
+		            	<h:outputText styleClass="bold" value="Issue date" />
+			  			<h:outputText value="24/08/11" />
+			  			
+		            </h:panelGrid> 
+		        </h:panelGrid>  
+		  		<p class="bold">Class : #{studentMarkBean.schoolTreeBean.selectedTreeNodeString} </p>
+		  		
+		  		
+		  		<div class="transcipt-table">
+			  		<h:dataTable id="notes" value="#{studentMarkBean.studentMarks}" var="studentsGrade" styleClass="fix-parent-panel" 
+	    		 		columnClasses="courseName">
+	    				
+		    			<h:column>
+		    				<f:facet name="header">Course</f:facet>
+		    				#{studentsGrade.classCourse.course.courseName}
+		    			</h:column>
+	    			
+		    			<h:column>
+		    				<f:facet name="header">Hours</f:facet>
+		    				#{studentsGrade.hoursTaken}
+		    			</h:column>
+		    			<h:column>
+		    				<f:facet name="header">Grad</f:facet>
+		    				#{studentsGrade.grad}
+		    			</h:column>
+		    			<h:column>
+		    				<f:facet name="header">Graded</f:facet>
+		    				#{studentsGrade.graded}		
+		    			</h:column>
+		    			<h:column>
+		    				<f:facet name="header">Grade</f:facet>
+		    				#{studentsGrade.grade} 				
+		    			</h:column>
+		    			<h:column>
+		    				<f:facet name="header">GP</f:facet>
+		    				#{studentsGrade.gp}			
+		    			</h:column>
+		    			<h:column>
+		    				<f:facet name="header">GPA</f:facet>
+		    				#{studentsGrade.gpa}		
+		    			</h:column>
+	    			</h:dataTable>
+    			</div>    			
+		  		</p:outputPanel>
+		        <p:commandButton id="submitButton" value="Submit">
+		        	<p:printer target="transcript"></p:printer>
+		        </p:commandButton>  
+		    
+		</p:dialog>
+		     	
+    </ui:define>
+    
+    </ui:composition>

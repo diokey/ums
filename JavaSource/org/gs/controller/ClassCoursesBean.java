@@ -112,13 +112,13 @@ public class ClassCoursesBean {
 		}
 		
 		if(addedCounter!=0) {
-			message+=comma?"":" , ";
+			message+=((comma)?" , ":"");
 			message+= addedCounter+" courses added";
 			comma = true;
 		}
 		
 		if(modifiedCounter!=0) {
-			message+=comma?"":" , ";
+			message+=((comma)?" , ":"");
 			message+= modifiedCounter+" courses modified";
 		}
 		
@@ -126,7 +126,7 @@ public class ClassCoursesBean {
 		
 		FacesUtil.addMessage(null, msg);
 		
-		if(this.selectedCourses!=null)		
+		if(this.selectedClassCourses!=null)		
 			this.selectedClassCourses.clear();
 		if(this.modifiedClassCourses!=null)
 			this.modifiedClassCourses.clear();
@@ -209,9 +209,7 @@ public class ClassCoursesBean {
 	private void init() {
 		
 		allCourses = this.courseDao.findAll();
-		
-		this.schoolTreeBean.getSelectedNode();
-		
+				
 		Structure classe = this.schoolTreeBean.getSelectedNodeData();
 		
 		SchoolPeriod sp = this.schoolTreeBean.getSelectedSchoolPeriod();

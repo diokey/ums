@@ -11,6 +11,7 @@
                  <p:menuitem value="Registration" icon="ui-icon-contact" url="/admin/student_registration.xhtml"></p:menuitem>
                  <p:menuitem value="Enrollment" url="#" />
                  <p:menuitem value="Students List" url="/admin/students.xhtml" />
+                 <p:menuitem value="Marks" url="/admin/studentMarks.xhtml"></p:menuitem>
                  <p:menuitem value="Settings" url="#" />
              </p:submenu>
 
@@ -37,14 +38,12 @@
              <p:submenu label="Attendances" icon="ui-icon-help">
                  <p:menuitem value="Teachers" url="#" />
                  <p:menuitem value="Staff" url="#" />
-                 <p:menuitem value="Students" url="#" />
-                 
+                 <p:menuitem value="Students" url="#" />                 
              </p:submenu>
              
              <p:submenu label="Evaluations" icon="ui-icon-help">
                  <p:menuitem value="Homework" url="#" />
-                 <p:menuitem value="Examinations" url="#" />
-                
+                 <p:menuitem value="#{uiMessages.examination}" url="/admin/examination.xhtml" />                
              </p:submenu>
              
              <p:submenu label="Fees" icon="ui-icon-help">

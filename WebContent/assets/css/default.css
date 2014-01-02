@@ -320,6 +320,68 @@ background-position: -66px -147px !important;
 }
 
 
-/* end login form*/
+
+#transcriptDialog .ui-dialog-titlebar{
+	background : none !important;
+}
+
+#transcriptDialog *{
+	font-family: Arial,sans-serif !important;
+	font-size: 12px;
+	color : black;
+}
+
+.studentInfo {
+ 	width: 75%;
+}
+	
+.align-top {
+	vertical-align: top;
+}
+	
+.schoolInfo {
+	vertical-align: top;
+	width: 25%;
+}
+    	
+.warning-transcript {
+	background: black;
+	
+	font-weight: bold;
+	margin-left: 60px;
+	margin-right: 60px;
+	text-align: center;
+}
+
+.warning-transcript p{
+	color: white !important;	
+}
+
+.bold {
+	font-weight: bold !important;
+}
+
+.transcipt-table table {
+	width: 100%;
+	border-collapse: collapse;
+}
+.transcipt-table table th {
+	border-bottom: 2px solid black;
+}
+
+.transcipt-table table tr:last-child {
+	border-top: 1px double black;
+}
+
+.transcipt-table table td {
+	text-align: center;
+	padding: 10px 0 0 0;
+}
+
+.courseName {
+	text-align: left !important;
+	padding-left : 20px !important;
+}
+
 
 }
