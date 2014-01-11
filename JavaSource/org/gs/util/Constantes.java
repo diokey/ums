@@ -10,7 +10,7 @@ public class Constantes {
     //session constants
     public static final String CONNECTED_USER="connectedUser";
     
-    //TO DO change this to handle mutiple schools
+    //TODO change this to handle mutiple schools
     public static final int CURRENT_SCHOOL = 1;
     
     public static final String ERROR = "Error";

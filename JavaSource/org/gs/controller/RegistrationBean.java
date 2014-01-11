@@ -18,6 +18,7 @@ import org.gs.model.Structure;
 import org.gs.model.Student;
 import org.gs.model.User;
 import org.gs.util.CommonUtils;
+import org.gs.util.Constantes;
 import org.gs.util.FacesUtil;
 import org.gs.util.HashUtil;
 
@@ -31,6 +32,7 @@ public class RegistrationBean {
 		
 		Structure selectedNode = this.schoolTreeBean.getSelectedNodeData();
 		FacesMessage messages = null;
+		User connectedUser = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
 		//save student infos
 		if(this.studentDao.create(this.newStudent)) {
 			int studentId = CommonUtils.getLastId("student", "student_id");
@@ -64,6 +66,8 @@ public class RegistrationBean {
 					if(sp!=null)
 						reg.setPeriodId(sp.getSchoolPeriodId());
 					reg.setStudentId(studentId);
+					reg.setModifiedBy(connectedUser.getUserId());
+					reg.setCreatedBy(connectedUser.getUserId());
 					reg.setDeleted(false);
 					
 					RegistrationDAO regDao = new RegistrationDAO();				

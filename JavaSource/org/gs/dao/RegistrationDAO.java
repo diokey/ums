@@ -27,8 +27,8 @@ public class RegistrationDAO extends DAO<Registration> {
 	@Override
 	public boolean create(Registration object) {
 		// TODO Auto-generated method stub
-		String sql = "INSERT INTO registration (student_id,class_id,period_id,comment,created_on,modified_on,deleted)"
-				+ " values (?,?,?,?,NOW(),NOW(),?)";
+		String sql = "INSERT INTO registration (student_id,class_id,period_id,comment,created_on,created_by,modified_on,modified_by,deleted)"
+				+ " values (?,?,?,?,NOW(),?,NOW(),?,?)";
 		PreparedStatement pst = null;
 		boolean rep = false;
 		
@@ -39,7 +39,9 @@ public class RegistrationDAO extends DAO<Registration> {
 			pst.setInt(2, object.getClassId());
 			pst.setInt(3, object.getPeriodId());
 			pst.setString(4, object.getComment());
-			pst.setBoolean(5, object.isDeleted());
+			pst.setInt(5, object.getCreatedBy());
+			pst.setInt(6, object.getModifiedBy());
+			pst.setBoolean(7, object.isDeleted());
 			
 			rep = pst.executeUpdate()>0;
 			

@@ -1,0 +1,135 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="title">
+       	#{uiMessages.addTeacher}
+   	</ui:define>
+
+	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem value="#{uiMessages.home}" url="/"/>
+				<p:menuitem value="#{uiMessages.teachers}" url="#"/>
+				<p:menuitem value="#{uiMessages.addTeacher}" />
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>
+	
+    <ui:define name="main">
+    	<h:form>	    	
+   		<p:accordionPanel widgetVar="formAccordion">
+   			<p:tab title="#{uiMessages.generalInfo}">
+   				<h:panelGrid columns="3">
+   					<p:outputLabel for="firstName" value="#{uiMessages.firstName}" />
+   					<p:inputText id="firstName" value="#{teacherBean.newTeacher.firstName}" required="true" 
+   					requiredMessage="#{uiMessages.fieldRequired}"/>
+   					<p:message for="firstName"></p:message>
+   					
+   					<p:outputLabel for="middleName" value="#{uiMessages.middleName}" />
+   					<p:inputText id="middleName" value="#{teacherBean.newTeacher.middleName}" />
+   					<p:message for="middleName"></p:message>
+   					
+   					<p:outputLabel for="lastName" value="#{uiMessages.lastName}" />
+   					<p:inputText id="lastName" value="#{teacherBean.newTeacher.lastName}" />
+   					<p:message for="lastName"></p:message>
+   					
+   					<p:outputLabel value="#{uiMessages.gender}" for="gender"/>
+   					<p:selectOneRadio id="gender" value="#{teacherBean.newTeacher.gender}">
+   						<f:selectItem itemValue="Male" itemLabel="Male"/>
+   						<f:selectItem itemValue="Female" itemLabel="Female"/>
+   					</p:selectOneRadio>
+   					<p:message for="gender"></p:message>
+   					
+   					<p:outputLabel value="#{uiMessages.birthdate}" for="birthdate"/>
+   					<p:calendar id="birthdate" value="#{teacherBean.newTeacher.birthDate}" pattern="mm-dd-yyyy"></p:calendar>
+   					<p:message for="birthdate"></p:message>
+   					
+   					<p:outputLabel value="#{uiMessages.nationality}" for="nationality"/>
+   					<p:inputText value="#{teacherBean.newTeacher.nationality}" id="nationality"/>
+   					<p:message for="nationality"></p:message>
+   					
+   					<p:outputLabel value="Highest diploma" for="diploma"/>
+   					<p:inputText value="#{teacherBean.newTeacher.highestDiploma}" id="diploma"/>
+   					<p:message for="diploma"></p:message>
+   					
+   					<p:outputLabel value="Position" for="position"/>
+   					<p:selectOneMenu value="#{teacherBean.newTeacher.staffPosition}" id="position">
+   						<f:selectItem itemLabel="Teacher" itemValue="1"/>
+   					</p:selectOneMenu>
+   					<p:message for="position"></p:message>
+   					
+   				</h:panelGrid>
+   			</p:tab>
+   			<p:tab title="#{uiMessages.adress}">
+   				<h:panelGrid columns="2">
+   					<p:outputLabel for="country" value="#{uiMessages.country}" />
+   					<p:inputText id="country" value="#{teacherBean.newTeacher.country}"></p:inputText>
+   					<p:outputLabel value="#{uiMessages.city}" for="city"/>
+					<p:inputText id="city" value="#{teacherBean.newTeacher.city}"></p:inputText>
+					<p:outputLabel value="#{uiMessages.adress}" for="adress"/>
+   					<p:inputText id="adress" value="#{teacherBean.newTeacher.adress}"></p:inputText>
+   				</h:panelGrid>
+   			</p:tab>
+   			<p:tab title="#{uiMessages.contactInfos}">
+   				<h:panelGrid columns="2">
+   					<p:outputLabel value="#{uiMessages.tel} 1" />
+   					<p:inputText value="#{teacherBean.newTeacher.tel1}" />
+   					<p:outputLabel value="#{uiMessages.tel} 2" />
+   					<p:inputText value="#{teacherBean.newTeacher.tel2}" />
+   					<p:outputLabel value="Email" for="email"/>
+   					<p:inputText id="email" value="#{teacherBean.newTeacher.email}" />
+   					<p:outputLabel value="Skype" for="skype"/>
+   					<p:inputText value="#{teacherBean.newTeacher.skype}" id="skype" />
+   					
+   				</h:panelGrid>
+   			</p:tab>
+   			<p:tab title="Teacher courses">
+   				<h:panelGrid columns="2">
+   					<h:outputLabel value="Class" for="classe"/>
+   					<p:selectOneMenu value="#{teacherBean.selectedClass.id}" id="classe" style="width:260px" valueChangeListener="#{teacherBean.onClassChanged}">
+		      			<f:selectItems value="#{teacherBean.classes}" var="classe" itemValue="#{classe.id}" itemLabel="#{classe.title}" itemDescription="#{classe.description}"/>
+		      			<p:ajax update="coursePickList"></p:ajax>
+		      		</p:selectOneMenu>      		
+		      		                    
+   				</h:panelGrid>
+   				<p:pickList id="coursePickList" value="#{teacherBean.classCourses}" var="classCourse" effect="bounce"  
+                    itemValue="#{classCourse}" itemLabel="#{classCourse.course.courseName}" converter="classcourseConverter" 
+                    showSourceControls="true" showTargetControls="true" showCheckbox="true"  
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" >                    
+                    	<f:facet name="sourceCaption">Available</f:facet>  
+        				<f:facet name="targetCaption">Starting</f:facet>
+        				<p:ajax event="transfer" listener="#{teacherBean.onTransfer}" /> 
+        				<p:column style="width:100%">
+        					#{classCourse.course.courseName}
+        				</p:column>
+                </p:pickList>	
+   			</p:tab>
+   			
+   			<p:tab title="#{uiMessages.loginInfos}">
+   				<h:panelGrid columns="2">
+   					<p:outputLabel for="username" value="#{uiMessages.username}" />
+   					<p:inputText id="username" value="#{teacherBean.newUser.username}" />
+   					<h:outputText value="#{uiMessages.password}" />
+   					<p:inputText value="#{teacherBean.newUser.userPassword}" />
+   					<p:selectBooleanCheckbox value="#{teacherBean.newUser.active}">
+   						<f:selectItem itemValue="#{uiMessages.access}"/>
+   					</p:selectBooleanCheckbox>
+   					<p:outputLabel value="Give access to use the application to this teacher"></p:outputLabel>
+   				</h:panelGrid>
+   			</p:tab>
+   			
+   		</p:accordionPanel>   		
+   		<p:spacer></p:spacer>
+   		
+		<h:panelGroup layout="block" styleClass="center-text">
+			<p:commandButton value="Cancel" type="reset"></p:commandButton>
+			<p:commandButton value="Save" action="#{teacherBean.saveTeacher}" update="@form,:messages"></p:commandButton>
+		</h:panelGroup>   	
+    	</h:form>
+    </ui:define>
+    
+</ui:composition>

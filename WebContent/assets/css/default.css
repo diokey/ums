@@ -325,6 +325,10 @@ background-position: -66px -147px !important;
 	background : none !important;
 }
 
+#transcriptDialog .ui-dialog-content {
+	height: 500px !important;
+}
+
 #transcriptDialog *{
 	font-family: Arial,sans-serif !important;
 	font-size: 12px;

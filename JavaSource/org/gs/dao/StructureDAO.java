@@ -235,6 +235,60 @@ public class StructureDAO extends DAO<Structure>{
 		return rootNodes;
 	}
 	
+	public List<Structure> getClassHierarchy(int school_structure_Id) {
+		List<Structure> classes = new ArrayList<Structure>();
+		
+		String req = "SELECT * FROM school_structure_details where school_structure_id = ? and is_leaf = 1";
+		
+		ResultSet res = null;
+		PreparedStatement pst = null;
+		
+		try {
+			pst = this.con.prepareStatement(req);
+			pst.setInt(1, school_structure_Id);
+			
+			res = pst.executeQuery();
+			
+			while(res.next()) {
+				Structure classe = new Structure();
+				
+				classe.setId(res.getInt("school_structure_details_id"));
+				int id= classe.getId();
+				classe.setDescription(res.getString("description"));
+				String desc = classe.getDescription();				
+				classe.setParentId(res.getInt("parent_id"));
+				classe.setTitle(res.getString("title"));
+				List<String> titles= new ArrayList<String>();
+				String chaine = "";				
+				do{
+					titles.add(classe.getTitle());
+					
+					classe = this.find(classe.getParentId());
+				}while(classe!=null && classe.getParentId()!=null);
+				
+				int titlesNumbers = titles.size();
+				
+				for(int i=titlesNumbers; i>0; i--) {
+					chaine+=">"+titles.get(i-1);
+				}
+				
+				chaine = chaine.substring(chaine.indexOf(">")+1);
+				classe = new Structure();
+				classe.setId(id);
+				classe.setDescription(desc);
+				classe.setTitle(chaine);
+				
+				classes.add(classe);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return classes;
+	}
+	
 	public List<Structure> getRoots(int school_structure_id) {
 		
 		String req = "SELECT school_structure_details_id FROM school_structure_details where school_structure_id=? and is_root=1";
@@ -272,11 +326,10 @@ public class StructureDAO extends DAO<Structure>{
 	
 	public static void main(String args[]) {
 		StructureDAO sdao = new StructureDAO(SingletonConnection.getInstance());
-		List<Structure> nodes = sdao.getRoots(1);
+		List<Structure> nodes = sdao.getClassHierarchy(1);
 		
 		for(Structure s : nodes) {
-			
-			readChildren(s);
+			System.out.println(s.getTitle());
 		}
 	}
 	

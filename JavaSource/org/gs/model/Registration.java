@@ -84,6 +84,22 @@ public class Registration {
 		this.period = period;
 	}
 
+	public int getModifiedBy() {
+		return modifiedBy;
+	}
+
+	public void setModifiedBy(int modifiedBy) {
+		this.modifiedBy = modifiedBy;
+	}
+
+	public int getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(int createdBy) {
+		this.createdBy = createdBy;
+	}
+
 
 
 
@@ -97,6 +113,8 @@ public class Registration {
 	private String comment;
 	private Date createdOn;
 	private Date modifiedOn;
+	private int modifiedBy;
+	private int createdBy;
 	private boolean deleted;
 	private List<Transcript> notes;
 }

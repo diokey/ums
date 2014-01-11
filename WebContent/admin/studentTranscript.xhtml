@@ -43,7 +43,7 @@
     		
     		<p:outputPanel id="transcripts">
     			<ui:repeat var="transcript" value="#{studentTranscriptBean.studentRegistration}">
-	    			<p:fieldset legend="#{transcript.period.period}">    			
+	    			<p:fieldset legend="#{transcript.period.period} #{transcript.period.startDate} - #{transcript.period.endDate}">    			
 	    				<p:dataTable id="notes" value="#{transcript.notes}" var="studentsGrade" styleClass="fix-parent-panel" 
 		    		 		>		    				
 			    			<p:column>
@@ -79,7 +79,92 @@
 	    			</p:fieldset>
     			</ui:repeat>
     		</p:outputPanel>
-    		   		
+	   		<p:outputPanel styleClass="center-text">
+	   			<p:commandButton value="Print" onclick="PF('transcriptdlg').show();" update=":transcript"></p:commandButton>
+	   		</p:outputPanel>
     	</h:form>
+    	
+    	<p:dialog id="transcriptDialog" widgetVar="transcriptdlg" resizable="false">  
+		   	   
+	  		<p:outputPanel layout="block" id="transcript">
+	  		<p class="center-text bold">INTERNATIONAL LEADERSHIP UNIVERSITY - BURUNDI</p>
+	  		<p class="center-text bold">670b2/A Yaranda Boulevard, Rohero 1, P.O Box 2330, Bujumbura</p>
+	  		
+	  		<div class="warning-transcript">
+	  			<p style="padding:6px">Note : Official transcripts mush have ILU seal on each page to be considered officail</p>
+	  		</div>
+	  		
+	  		
+	        <h:panelGrid columns="2" rowClasses="align-top" columnClasses="studentInfo,schoolInfo" style="width:100%;margin-bottom:10px;">  
+	            <h:panelGrid columns="2" style="width:100%;">
+	            	<h:outputText styleClass="bold" value="Student ID" />
+		  			<h:outputText value="00-00-0110" />
+		  			<h:outputText styleClass="bold" value="Student name" />
+		  			<h:outputText value="#{studentTranscriptBean.selectedRegistration.student.name} #{studentMarkBean.selectedRegistration.student.middleName} #{studentMarkBean.selectedRegistration.student.lastName}" />
+		  			<h:outputText styleClass="bold" value="Birth Date" />
+		  			<h:outputText value="#{studentTranscriptBean.selectedRegistration.student.birthDate}" />
+		  			<h:outputText styleClass="bold" value="Gender" />
+		  			<h:outputText value="#{studentTranscriptBean.selectedRegistration.student.gender}" />
+		  			<h:outputText styleClass="bold" value="Nationality" />
+		  			<h:outputText value="#{studentTranscriptBean.selectedRegistration.student.nationality}" />
+	            </h:panelGrid>
+	            <h:panelGrid columns="2" style="width:100%;">
+	            	<h:outputText styleClass="bold" value="Issue date" />
+		  			<h:outputText value="24/08/11" />		  			
+	            </h:panelGrid> 
+	        </h:panelGrid>  
+	  		<p class="bold">Class : #{studentMarkBean.schoolTreeBean.selectedTreeNodeString} </p>
+	  		
+	  		<div class="transcipt-table">
+		  		<p:outputPanel id="transcripts">
+    			<ui:repeat var="transcript" value="#{studentTranscriptBean.studentRegistration}">
+	    			<fieldset>
+	    				<legend>#{transcript.period.period} #{transcript.period.startDate} - #{transcript.period.endDate}</legend>    			
+	    				<h:dataTable id="notes" value="#{transcript.notes}" var="studentsGrade" styleClass="fix-parent-panel" 
+		    		 		>		    				
+			    			<h:column>
+			    				<f:facet name="header">Course</f:facet>
+			    				#{studentsGrade.classCourse.course.courseName}
+			    			</h:column>
+		    			
+			    			<h:column>
+			    				<f:facet name="header">Hours</f:facet>
+			    				#{studentsGrade.hoursTaken}
+			    			</h:column>
+			    			<h:column>
+			    				<f:facet name="header">Grad</f:facet>
+			    				#{studentsGrade.grad}
+			    			</h:column>
+			    			<h:column>
+			    				<f:facet name="header">Graded</f:facet>
+			    				#{studentsGrade.graded}		
+			    			</h:column>
+			    			<h:column>
+			    				<f:facet name="header">Grade</f:facet>
+			    				#{studentsGrade.grade} 				
+			    			</h:column>
+			    			<h:column>
+			    				<f:facet name="header">GP</f:facet>
+			    				#{studentsGrade.gp}			
+			    			</h:column>
+			    			<h:column>
+			    				<f:facet name="header">GPA</f:facet>
+			    				#{studentsGrade.gpa}		
+			    			</h:column>
+		    			</h:dataTable>
+	    			</fieldset>
+	    			<br />
+	    			
+    			</ui:repeat>
+    		</p:outputPanel>
+   			</div>    			
+	  		</p:outputPanel>
+	  		<p:outputPanel styleClass="center-text">
+		        <p:commandButton id="submitButton" value="Print">
+		        	<p:printer target="transcript"></p:printer>
+		        </p:commandButton>  
+		    </p:outputPanel>
+		</p:dialog>
+    	
     </ui:define>
 </ui:composition>
