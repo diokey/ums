@@ -11,7 +11,7 @@
    	
    	<ui:define name="jsFunction">
 		<h:form>
-			<p:remoteCommand name="treeNodeChanged"></p:remoteCommand>
+			<p:remoteCommand name="treeNodeChanged" action="#{enrollmentBean.onClassChanged}" update=":registrationForm"></p:remoteCommand>
 		</h:form>
 	</ui:define>
    	
@@ -26,7 +26,7 @@
 	</ui:define>
 	
     <ui:define name="main">
-    	<h:form>
+    	<h:form id="registrationForm" styleClass="fix-parent-panel">
     		<p:dataTable value="#{enrollmentBean.registeredStudents}" var="registration" selection="#{enrollmentBean.selectedRegistrations}"
     		rowKey="#{registration.registrationId}">
     			<f:facet name="header">Students Registered in <b>#{schoolTreeBean.selectedTreeNodeString}</b></f:facet>

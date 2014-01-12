@@ -8,14 +8,17 @@
       
       <h:form id="tree_form">
           	<p:growl id="messages" showDetail="true"></p:growl>
-          	<p:selectOneMenu value="#{schoolTreeBean.selectedSchool.schoolId}">
+          	<p:selectOneMenu value="#{schoolTreeBean.selectedSchool.schoolId}" valueChangeListener="#{schoolTreeBean.onSchoolChanged}">
           		<f:selectItems value="#{schoolTreeBean.schools}" var="school" itemValue="#{school.schoolId}" itemLabel="#{school.title}"/>
+          		<p:ajax event="change" oncomplete="treeNodeChanged()" update="tree_form"></p:ajax>
           	</p:selectOneMenu>
-          	<p:selectOneMenu value="#{schoolTreeBean.selectedSchoolYear.schoolYearId}">
+          	<p:selectOneMenu value="#{schoolTreeBean.selectedSchoolYear.schoolYearId}" valueChangeListener="#{schoolTreeBean.onSchoolYearChanged}">
           		<f:selectItems value="#{schoolTreeBean.schoolYears}" var="schoolYear" itemValue="#{schoolYear.schoolYearId}" itemLabel="#{schoolYear.schoolYearTitle}"/>
+          		<p:ajax event="change" oncomplete="treeNodeChanged()" update="tree_form"></p:ajax>
           	</p:selectOneMenu>          	
-      		<p:selectOneMenu value="#{schoolTreeBean.selectedSchoolPeriod.schoolPeriodId}">
+      		<p:selectOneMenu value="#{schoolTreeBean.selectedSchoolPeriod.schoolPeriodId}" valueChangeListener="#{schoolTreeBean.onSchoolPeriodChanged}">
       			<f:selectItems value="#{schoolTreeBean.schoolPeriods}" var="schoolPeriod" itemValue="#{schoolPeriod.schoolPeriodId}" itemLabel="#{schoolPeriod.period}"/>
+      			<p:ajax event="change" oncomplete="treeNodeChanged()" update="tree_form"></p:ajax>
       		</p:selectOneMenu>
           	
           	<p:tree id="school_tree" value="#{schoolTreeBean.root}" var="node"

@@ -19,9 +19,8 @@
 		</h:form>	
 	</ui:define>
 	
-    <ui:define name="main">
-    	<p:spacer></p:spacer>
-    	<h:form>
+    <ui:define name="main">    	
+    	<h:form styleClass="fix-parent-panel">
     		<p:dataTable value="#{registrationBean.registrations}" var="registration">
     			<f:facet name="header">Students Registered in <b>#{schoolTreeBean.selectedTreeNodeString}</b></f:facet>
     			<p:column headerText="RegistrationId">

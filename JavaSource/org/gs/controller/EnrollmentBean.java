@@ -25,6 +25,10 @@ import org.gs.util.FacesUtil;
 public class EnrollmentBean {
 
 	
+	public void onClassChanged() {
+		this.init();
+	}
+	
 	public void enrollStudents() {
 		
 		FacesMessage messages = null;

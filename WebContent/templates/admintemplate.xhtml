@@ -53,16 +53,14 @@
                 <p:layoutUnit id="bottom" position="south" size="30" resizable="true">                	
                 	<ui:insert name="footer">
                 		<h:panelGroup layout="block" style="text-align:center;">
-                     		<a href="http://geek-solution.com"><strong>Geek Solution 2013</strong></a> - Leadership University
+                     		<a href="http://geek-solution.com"><strong>Geek Solution 2014</strong></a> - Leadership University
                    		</h:panelGroup>
                 	</ui:insert>                	
                     
                 </p:layoutUnit>
 
                 <p:layoutUnit id="left" position="west" size="300" resizable="true" closable="false" collapsible="true" header="UMS (University Management System)" minSize="200">
-                    <f:facet name="header">
                     
-                    </f:facet>
                     <ui:insert name="tree">
                     	<ui:include src="/includes/school_tree.xhtml" />
                     </ui:insert>                   
@@ -70,10 +68,10 @@
                 </p:layoutUnit>
 
                 <p:layoutUnit id="right" position="east" size="250" header="Options" resizable="true" closable="false" collapsible="true"
-                              style="text-align:center">
+                              style="text-align:center" collapsed="true">
 
                     <ui:insert name="righBlock">
-                    	<p:commandButton id="basic" value="Show Dialog" onclick="PF('dlg').show();" type="button" style="margin-top:10px"/>
+                    	<!-- <p:commandButton id="basic" value="Show Dialog" onclick="PF('dlg').show();" type="button" style="margin-top:10px"/> -->
 					</ui:insert>
 					
                 </p:layoutUnit>

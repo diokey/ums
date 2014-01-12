@@ -35,13 +35,24 @@ public class StudentMarkBean {
 		if(this.isTranscriptGenerated()) {
 			return;
 		}
+		
+		Transcript total = this.computeTotal(this.studentMarks);
+		
+		this.transcriptDao.saveTotal(total);
+		
+		this.studentMarks.add(total);
+		
+		
+	}
+	
+	private Transcript computeTotal(List<Transcript> marks) {
 		float totalGp = 0;
 		float totalGpa = 0;
 		int totalHours = 0;
 		int totalGrad = 0;
 		int totalGraded = 0;
 		
-		for(Transcript t : this.studentMarks) {
+		for(Transcript t : marks) {
 			totalHours+=t.getHoursTaken();
 			totalGrad+= t.getGrad();
 			totalGraded+= t.getGraded();
@@ -67,11 +78,7 @@ public class StudentMarkBean {
 		total.setCreatedBy(u.getUserId());
 		total.setModifiedBy(u.getUserId());
 		
-		this.transcriptDao.saveTotal(total);
-		
-		this.studentMarks.add(total);
-		
-		
+		return total;
 	}
 	
 	public void saveNotes() {
@@ -184,6 +191,11 @@ public class StudentMarkBean {
 			this.studentMarks = new ArrayList<Transcript>();
 		
 		this.grades = this.gradeDao.findAll(1);
+		
+		//if transcript already generated, go ahead and compute the total
+		if(this.isTranscriptGenerated()) {
+			this.studentMarks.add(this.computeTotal(this.studentMarks));
+		}
 	}
 	
 	public StudentMarkBean() {

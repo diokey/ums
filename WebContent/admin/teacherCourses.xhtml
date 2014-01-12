@@ -1,0 +1,89 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="title">
+       	#{uiMessages.addTeacher}
+   	</ui:define>
+
+	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem value="#{uiMessages.home}" url="/"/>
+				<p:menuitem value="#{uiMessages.teachers}" url="#"/>
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>
+	
+    <ui:define name="main">
+    	<h:form styleClass="fix-parent-panel">
+    		<p:dataTable value="#{teacherCourseBean.teachers}" var="teacher">
+    			<f:facet name="header">#{uiMessages.teacherList}</f:facet>
+    			<p:column headerText="First Name">
+    				#{teacher.firstName}
+    			</p:column>
+    			<p:column headerText="Middle Name">
+    				#{teacher.middleName}
+    			</p:column>
+    			<p:column headerText="Last Name">
+    				#{teacher.lastName}
+    			</p:column>
+    			<p:column headerText="Gender">
+    				#{teacher.gender}
+    			</p:column>
+    			<p:column headerText="Nationality">
+    				#{teacher.nationality}
+    			</p:column>
+    			<p:column headerText="Diploma">
+    				#{teacher.highestDiploma}
+    			</p:column>
+    			<p:column headerText="Courses">
+    				<p:commandLink value="Courses" action="#{teacherCourseBean.findTeacherCourses}" update=":courseDialog" oncomplete="PF('courseDialog').show()">
+    					<f:setPropertyActionListener target="#{teacherCourseBean.currentTeacher}" value="#{teacher}"/>
+    				</p:commandLink>
+    			</p:column>
+    		</p:dataTable>
+    	</h:form>
+    	
+    	<p:dialog id="courseDialog" resizable="false" width="500" widgetVar="courseDialog" header="Teacher courses" closable="true">
+    		<p:dataTable value="#{teacherCourseBean.currentTeacher.lectures}" var="classCourse" styleClass="fix-parent-panel">
+    			<f:facet name="header">
+    				Course taught by #{teacherCourseBean.currentTeacher.firstName} #{teacherCourseBean.currentTeacher.middleName} #{teacherCourseBean.currentTeacher.lastName}
+    			</f:facet>
+    			<p:column headerText="Course name">
+    				#{classCourse.course.courseName}
+    			</p:column>
+    			<p:column headerText="Description">
+    				#{empty classCourse.courseDescription?classCourse.course.courseDescription:classCourse.courseDescription}
+    			</p:column>
+    			<p:column headerText="Credits">
+    				#{classCourse.credits}
+    			</p:column>
+    			<p:column headerText="Action">
+   					<p:commandLink><span class="ui-icon ui-icon-trash" title="Delete"></span></p:commandLink>
+    			</p:column>
+    		</p:dataTable>
+    		<p:outputPanel styleClass="fix-parent-panel">
+    			<p:button icon="ui-icon-add" value="Add Course"></p:button>
+    		</p:outputPanel>
+    		<p:panel styleClass="fix-parent-panel">
+    			<h:panelGrid columns="2">
+    				<p:outputLabel for="classes">Class</p:outputLabel>    					
+    				<p:selectOneMenu id="classes" >
+    					<f:selectItems value="#{teacherCourseBean.classes}" var="classe" itemLabel="#{classe.title}" itemValue="#{classe.id}" itemDescription="#{classe.description}"/>
+    				</p:selectOneMenu>
+    				<p:outputLabel for="courses">Courses</p:outputLabel>
+					<p:selectOneMenu id="courses">
+						<f:selectItems value="#{teacherCourseBean.classCourses}" var="classeCourse" itemLabel="#{classeCourse.course.courseName}" itemValue="#{classeCourse.classCourseId}" itemDescription="#{classeCourse.courseDescription}"/>
+					</p:selectOneMenu>
+					<p:outputPanel styleClass="fix-parent-panel center-text">
+						<p:commandButton value="Add"></p:commandButton>
+					</p:outputPanel>
+				</h:panelGrid>
+    		</p:panel>
+    	</p:dialog>
+   	</ui:define>
+ </ui:composition>

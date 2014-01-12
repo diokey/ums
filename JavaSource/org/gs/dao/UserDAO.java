@@ -120,7 +120,7 @@ public class UserDAO extends DAO<User>{
 	}
 	
 	public User checkLogin(String username, String password) {
-User selected = null;
+		User selected = null;
 		
 		String req = "SELECT * FROM users where username = ? and password_hash = ?";
 		
@@ -206,6 +206,13 @@ User selected = null;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				statement.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		

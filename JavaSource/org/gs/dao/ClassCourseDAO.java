@@ -280,6 +280,34 @@ public class ClassCourseDAO extends DAO<ClassCourse>{
 		return classCourse;
 	}
 	
+	
+	public List<ClassCourse> findTeacherCourses(int teacherId) {
+		List<ClassCourse> classCourses = new ArrayList<ClassCourse>();
+		
+		String sql = "SELECT * FROM teacher_course where teacher_id=?";
+		ResultSet res = null;
+		PreparedStatement pst = null;
+		
+		try {
+			pst = this.con.prepareStatement(sql);
+			pst.setInt(1, teacherId);
+			
+			
+			res = pst.executeQuery();
+			
+			while(res.next()) {
+				ClassCourse c = this.find(res.getInt("classe_course_id"));
+				
+				classCourses.add(c);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return classCourses;
+	}
+	
 	public List<ClassCourse> findClassCourses(int classId, int periodId) {
 		List<ClassCourse> courses = new ArrayList<ClassCourse>();
 		

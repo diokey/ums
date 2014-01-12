@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 
 import org.gs.dao.SchoolDAO;
 import org.gs.dao.StructureDAO;
@@ -32,6 +33,66 @@ public class SchoolTreeBean implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	
+	public void onSchoolChanged(ValueChangeEvent event) {
+		if(event==null || event.getNewValue()==null)
+			return;
+		int schoolId = 0;
+		
+		this.selectedSchool = this.findSelectedSchool(schoolId);
+	}
+	
+	public void onSchoolYearChanged(ValueChangeEvent event) {
+		if(event==null || event.getNewValue()==null)
+			return;
+		int schoolYearId = 0;
+		
+		this.selectedSchoolYear = this.findSelectedSchoolYear(schoolYearId);
+	}
+	
+	public void onSchoolPeriodChanged(ValueChangeEvent event) {
+		if(event==null || event.getNewValue()==null)
+			return;
+		int periodId = 0;
+		
+		periodId = Integer.parseInt(""+event.getNewValue());
+		
+		this.selectedSchoolPeriod = findSelectedPeriod(periodId);
+		
+		System.out.println("Changed to : "+this.selectedSchoolPeriod.getSchoolPeriodId());
+	}
+	
+	public SchoolPeriod findSelectedPeriod(int periodId) {
+		SchoolPeriod sp = null;
+		
+		for(SchoolPeriod period : this.schoolPeriods) {
+			if(period.getSchoolPeriodId()==periodId)
+				return period;
+		}
+		
+		return sp;
+	}
+	
+	private SchoolYear findSelectedSchoolYear(int yearId) {
+		SchoolYear sy = null;
+		
+		for(SchoolYear year : this.schoolYears) {
+			if(year.getSchoolYearId()==yearId)
+				return year;
+		}
+		
+		return sy;
+	}
+	
+	private School findSelectedSchool(int schoolId) {
+		
+		for(School s : this.schools) {
+			if(s.getSchoolId()==schoolId)
+				return s;
+		}
+		
+		return null;
+	}
 	
 	public void deleteStructure(ActionEvent e) {
 		StructureDAO sd = new StructureDAO();

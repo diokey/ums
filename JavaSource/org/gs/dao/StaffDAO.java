@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.gs.db.SingletonConnection;
 import org.gs.model.Staff;
+import org.gs.model.Teacher;
 import org.gs.util.CommonUtils;
 
 public class StaffDAO extends DAO<Staff>{
@@ -93,8 +94,8 @@ public class StaffDAO extends DAO<Staff>{
 		return null;
 	}
 	
-	public List<Staff> findAllTeachers() {
-		List<Staff> teachers = new ArrayList<Staff>();
+	public List<Teacher> findAllTeachers() {
+		List<Teacher> teachers = new ArrayList<Teacher>();
 		
 		String sql = "SELECT * FROM staff where staff_position_id = 1";
 		Statement st = null;
@@ -106,10 +107,11 @@ public class StaffDAO extends DAO<Staff>{
 			res = st.executeQuery(sql);
 			
 			while(res.next()) {
-				Staff t = new Staff();
+				Teacher t = new Teacher();
 				t.setStaffId(res.getInt("staff_id"));
 				t.setFirstName(res.getString("first_name"));
-				t.setMiddleName(res.getString("last_name"));
+				t.setMiddleName(res.getString("middle_name"));
+				t.setLastName(res.getString("last_name"));
 				t.setGender(res.getString("gender"));
 				t.setBirthDate(res.getDate("birth_date"));
 				t.setStaffPosition(res.getInt("staff_position_id"));
@@ -153,7 +155,7 @@ public class StaffDAO extends DAO<Staff>{
 	public List<Staff> findAll() {
 		List<Staff> teachers = new ArrayList<Staff>();
 		
-		String sql = "SELECT * FROM staff where staff_position_id = 1";
+		String sql = "SELECT * FROM staff";
 		Statement st = null;
 		ResultSet res = null;
 		
@@ -166,7 +168,8 @@ public class StaffDAO extends DAO<Staff>{
 				Staff t = new Staff();
 				t.setStaffId(res.getInt("staff_id"));
 				t.setFirstName(res.getString("first_name"));
-				t.setMiddleName(res.getString("last_name"));
+				t.setMiddleName(res.getString("middle_name"));
+				t.setLastName(res.getString("last_name"));
 				t.setGender(res.getString("gender"));
 				t.setBirthDate(res.getDate("birth_date"));
 				t.setStaffPosition(res.getInt("staff_position_id"));

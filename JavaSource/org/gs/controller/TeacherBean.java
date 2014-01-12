@@ -106,10 +106,7 @@ public class TeacherBean {
 			message = new FacesMessage(FacesMessage.SEVERITY_ERROR,"",failMsg);
 			FacesUtil.addMessage(null, message);
 		}
-		
-		
-		
-		
+	
 	}
 	
 	
@@ -162,17 +159,6 @@ public class TeacherBean {
 		return null;
 	}
 	
-	public void onTransfer(TransferEvent event) {
-		if(event==null)
-			return;
-		
-		for(Object item : event.getItems()) {
-			//ClassCourse cc = (ClassCourse) item;
-			System.out.println(item+" : class"+item.getClass());
-			
-			//System.out.println(cc.getClassCourseId()+" : "+cc.getCourse());
-		}
-	}
 	
 	public TeacherBean() {
 		// TODO Auto-generated constructor stub
@@ -277,6 +263,19 @@ public class TeacherBean {
 	public void setSchoolTreeBean(SchoolTreeBean schoolTreeBean) {
 		this.schoolTreeBean = schoolTreeBean;
 	}
+	
+	public List<Teacher> getTeachers() {
+		if(teachers==null) {
+			teachers = this.teacherDao.findAllTeachers();
+		}
+		return teachers;
+	}
+
+
+	public void setTeachers(List<Teacher> teachers) {
+		this.teachers = teachers;
+	}
+
 
 
 
@@ -296,6 +295,7 @@ public class TeacherBean {
 	
 	private List<ClassCourse> classCourseSource;
 	private List<ClassCourse> classCourseTarget;
+	private List<Teacher> teachers;
 	
 	private DualListModel<ClassCourse> classCourses;
 	
