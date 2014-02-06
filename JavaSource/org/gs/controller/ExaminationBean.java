@@ -12,11 +12,13 @@ import javax.faces.event.ValueChangeEvent;
 
 import org.gs.dao.ClassCourseDAO;
 import org.gs.dao.GradeDAO;
+import org.gs.dao.StaffDAO;
 import org.gs.dao.TranscriptDAO;
 import org.gs.layout.SchoolTreeBean;
 import org.gs.model.ClassCourse;
 import org.gs.model.Grade;
 import org.gs.model.SchoolPeriod;
+import org.gs.model.Staff;
 import org.gs.model.Structure;
 import org.gs.model.Transcript;
 import org.gs.model.User;
@@ -125,8 +127,17 @@ public class ExaminationBean {
 		Structure classe = this.schoolTreeBean.getSelectedNodeData();
 		
 		SchoolPeriod sp = this.schoolTreeBean.getSelectedSchoolPeriod();
+		User user = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
 		
-		this.classCourses = this.classCourseDao.findClassCourses(classe.getId(), sp.getSchoolPeriodId());
+		if(user.getUserRoleId()==2) {
+			
+			Staff teacher = new StaffDAO().findByUserId(user.getUserId());
+			
+			this.classCourses = this.classCourseDao.findClassCourses(classe.getId(), sp.getSchoolPeriodId(),teacher.getStaffId());
+		}else {
+			this.classCourses = this.classCourseDao.findClassCourses(classe.getId(), sp.getSchoolPeriodId());
+		}
+		
 		
 		if(this.selectedCourse==null) {
 			if(this.classCourses!=null && !this.classCourses.isEmpty())

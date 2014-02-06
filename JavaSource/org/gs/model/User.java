@@ -1,6 +1,7 @@
 package org.gs.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class User implements Serializable{
 
@@ -127,7 +128,17 @@ public class User implements Serializable{
 		this.userRoleId = userRoleId;
 	}
 	
-	
+	public List<Permission> getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(List<Permission> permissions) {
+		this.permissions = permissions;
+	}
+
+
+
+
 
 
 	private int userId;
@@ -148,4 +159,6 @@ public class User implements Serializable{
 	private boolean active;
 	private int passwordIterations;
 	private boolean forcePasswordReset;
+	
+	private List<Permission> permissions;
 }

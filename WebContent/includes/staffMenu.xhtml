@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	 <h:form>
+         <p:menubar>
+           <p:submenu label="Students" icon="ui-icon-document">                 
+                 <p:menuitem value="Students List" url="/staff/students.xhtml" />                 
+             </p:submenu>
+
+             <p:submenu label="Staff" icon="ui-icon-pencil">             	
+           		<p:menuitem value="Teacher's List" url="/staff/teacherList.xhtml"></p:menuitem>             	
+                <p:menuitem value="Others" url="#" icon="ui-icon-arrowreturnthick-1-e"></p:menuitem>             	
+             </p:submenu>
+
+             <p:submenu label="Courses" icon="ui-icon-help">
+                 <p:menuitem value="Course Catalog" url="/staff/courseCatalog.xhtml"/>                 
+             </p:submenu>
+             
+             <p:submenu label="Scheduling" icon="ui-icon-help">
+                 <p:menuitem value="Exams" url="#" />
+                 <p:menuitem value="Lectures" url="#" />                 
+             </p:submenu>
+             <p:submenu label="Attendances" icon="ui-icon-help">
+                 <p:menuitem value="Students" url="#" />                 
+             </p:submenu>
+             
+             <p:submenu label="Evaluations" icon="ui-icon-help">
+                 <p:menuitem value="Homework" url="#" />
+                 <p:menuitem value="#{uiMessages.examination}" url="/staff/examination.xhtml" />                
+             </p:submenu>             
+             
+             <p:submenu label="Setttings" icon="ui-icon-pencil">
+                 <p:menuitem value="School" url="#" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>
+                 <p:menuitem value="School Year" url="#"></p:menuitem>
+                 <p:menuitem value="Period" url="#" icon="ui-icon-arrowreturnthick-1-e"></p:menuitem>
+             	<p:menuitem value="Grades" url="#"></p:menuitem>
+             	<p:menuitem value="Structure" url="#"></p:menuitem>
+             </p:submenu>
+             
+             <p:submenu icon="ui-icon-person" style="float:right" label="#{userBean.user.username}" rendered="#{userBean.connected}">
+             	<p:menuitem value="Profile" icon="ui-icon-clipboard"></p:menuitem>
+             	<p:menuitem value="Settings" icon="ui-icon-wrench"></p:menuitem>
+             	<p:menuitem value="Log out" icon="ui-icon-transfer-e-w" actionListener="#{userBean.logOut}"></p:menuitem>
+             </p:submenu>
+             
+         </p:menubar>
+     </h:form>
+</ui:composition>

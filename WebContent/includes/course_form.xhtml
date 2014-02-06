@@ -7,10 +7,10 @@
 	<p:panel id="coursePanel" styleClass="fix-parent-panel">
 			<h:form>				
 				<h:panelGrid columns="2">
-					<h:outputLabel value="Course" />
-					<h:inputText value="#{courseBean.newCourse.courseName}" />
-					<h:outputLabel value="Description" />
-					<h:inputTextarea value="#{courseBean.newCourse.courseDescription}"/>
+					<p:outputLabel value="Course" />
+					<p:inputText value="#{courseBean.newCourse.courseName}" />
+					<p:outputLabel value="Description" />
+					<p:inputTextarea value="#{courseBean.newCourse.courseDescription}"/>
 				</h:panelGrid>
 				<h:panelGroup layout="block" styleClass="center-text">
 					<p:commandButton value="Save" actionListener="#{courseBean.saveCourse}" update=":messages,@form"></p:commandButton>

@@ -1,0 +1,94 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+            
+    <ui:define name="title">
+       	#{uiMessages.examination}
+   	</ui:define>
+   	<ui:define name="mainMenu">
+		<ui:include src="/includes/staffMenu.xhtml" />
+	</ui:define>
+	
+   	<ui:define name="jsFunction">
+		<h:form>
+			<p:remoteCommand name="treeNodeChanged" action="#{examinationBean.onClassChanged}" update=":examination-form"></p:remoteCommand>
+		</h:form>
+	</ui:define>
+   	
+   	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem value="#{uiMessages.home}" url="/"/>
+				<p:menuitem value="#{uiMessages.examination}" url="#"/>
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>
+	
+    <ui:define name="main">
+    	<h:form id="examination-form">
+    		<p:panel styleClass="fix-parent-panel">
+	    		<h:panelGrid columns="4">
+	    			<p:outputLabel value="Course" for="courses"/>
+	    			<p:selectOneMenu id="courses" valueChangeListener="#{examinationBean.onCourseChanged}">
+	    				<f:selectItems value="#{examinationBean.classCourses}" var="classCourse" 
+	    				itemLabel="#{classCourse.course.courseName}" itemValue="#{classCourse.classCourseId}" 
+	    				itemDescription="#{classCourse.courseDescription}"/>
+	    				<p:ajax event="change" update="credits,notes"></p:ajax>
+	    			</p:selectOneMenu>
+	    			<p:outputLabel value="Credit"></p:outputLabel>
+	    			<p:inputText id="credits" value="#{examinationBean.selectedCourse.credits}" disabled="true"></p:inputText>
+	    		</h:panelGrid>
+	    		
+    		</p:panel>
+    		<p:dataTable id="notes" value="#{examinationBean.students}" var="studentsGrade" styleClass="fix-parent-panel" 
+    		 rowKey="#{studentsGrade.transcriptId}" rowIndexVar="index">
+    			<f:facet name="header">Student's grade point in <em>#{examinationBean.selectedCourse.course.courseName}</em></f:facet>
+    			
+    			<p:column headerText="First Name">
+    				#{studentsGrade.registration.student.name}
+    			</p:column>
+    			<p:column headerText="Last Name">
+    				#{studentsGrade.registration.student.lastName}
+    			</p:column>
+    			<p:column headerText="Hours taken">
+    				#{studentsGrade.hoursTaken}
+    			</p:column>
+    			<p:column headerText="Grad">
+    				#{studentsGrade.grad}
+    			</p:column>
+    			<p:column headerText="Graded">
+    				<p:inputText value="#{studentsGrade.graded}" size="5">
+    					<p:ajax event="change"></p:ajax>
+    				</p:inputText>    				
+    			</p:column>
+    			<p:column headerText="Grade">    				
+    				<p:selectOneMenu value="#{studentsGrade.grade}">
+    					<f:selectItem itemLabel="" itemValue=""/>
+    					<f:selectItems value="#{examinationBean.grades}" var="grade" 
+    					itemLabel="#{grade.letterCode}" itemValue="#{grade.letterCode}"
+    					itemDescription="#{grade.levelAchievement}"/>
+    					<p:ajax event="change" process="@this" update="gp,gpa" listener="#{examinationBean.assignGrade(index)}">    						
+    					</p:ajax>
+    				</p:selectOneMenu>
+    			</p:column>
+    			<p:column headerText="GP">
+    				<p:inputText id="gp" value="#{studentsGrade.gp}" size="5">
+    					<p:ajax event="change"></p:ajax>
+    				</p:inputText>    				
+    			</p:column>
+    			<p:column headerText="GPA">
+    				<p:inputText id="gpa" value="#{studentsGrade.gpa}" size="5">
+    					<p:ajax event="change"></p:ajax>
+    				</p:inputText>    				
+    			</p:column>
+    		</p:dataTable>
+    		<p:outputPanel styleClass="center-text">
+    			<p:commandButton value="Save" icon="ui-icon-save" immediate="true" action="#{examinationBean.saveNotes}" update=":messages"></p:commandButton>
+    		</p:outputPanel>
+    	</h:form>
+    </ui:define>
+   	
+</ui:composition>

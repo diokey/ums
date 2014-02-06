@@ -56,16 +56,105 @@ public class TeacherCourseDAO extends DAO<TeacherCourse>{
 		return false;
 	}
 
-	@Override
-	public boolean delete(TeacherCourse object) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 	@Override
 	public TeacherCourse find(int id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	@Override
+	public boolean delete(TeacherCourse object) {
+		// TODO Auto-generated method stub
+		String sql = "DELETE FROM teacher_course where teacher_course_id = ?";
+		
+		PreparedStatement pst = null;
+		boolean rep = false;
+		
+		try {
+			pst = this.con.prepareStatement(sql);
+			pst.setInt(1, object.getTeacherCourseId());
+						
+			rep = pst.executeUpdate()>0;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return rep;
+	}
+	
+	public boolean deleteTeacherCourse(TeacherCourse object) {
+		// TODO Auto-generated method stub
+		String sql = "DELETE FROM teacher_course where teacher_id = ? and course_id = ?";
+		
+		PreparedStatement pst = null;
+		boolean rep = false;
+		
+		try {
+			pst = this.con.prepareStatement(sql);
+			pst.setInt(1, object.getTeacherCourseId());
+			pst.setInt(2, object.getClassCourseId());
+						
+			rep = pst.executeUpdate()>0;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return rep;
+	}
+	
+	public boolean softDelete(TeacherCourse object) {
+		String sql = "UPDATE teacher_course SET deleted = ?"
+				+ " WHERE teacher_course_id = ? ";				
+		
+		PreparedStatement pst = null;
+		boolean rep = false;
+		
+		try {
+			pst = this.con.prepareStatement(sql);
+			pst.setBoolean(1, true);
+			pst.setInt(2, object.getClassCourseId());
+			
+			rep = pst.executeUpdate()>0;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return rep;
+	}
+	
+	
 }

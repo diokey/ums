@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+	
+	<p:dataTable value="#{permissionBean.permissionList}" var="permission">
+		<f:facet name="header">Permissions</f:facet>
+		<p:column headerText="Role">
+			#{permission.name}
+		</p:column>
+		<p:column headerText="Description">
+			#{permission.description}
+		</p:column>
+	</p:dataTable>
+	
+</ui:composition>

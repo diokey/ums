@@ -94,6 +94,63 @@ public class StaffDAO extends DAO<Staff>{
 		return null;
 	}
 	
+	public Staff findByUserId(int id) {
+		
+		String sql = "SELECT * FROM staff where user_id = ?";
+		PreparedStatement st = null;
+		ResultSet res = null;
+		Teacher t = null;
+		try {
+			st = this.con.prepareStatement(sql);
+			st.setInt(1, id);
+			
+			res = st.executeQuery();
+			
+			while(res.next()) {
+				t = new Teacher();
+				t.setStaffId(res.getInt("staff_id"));
+				t.setFirstName(res.getString("first_name"));
+				t.setMiddleName(res.getString("middle_name"));
+				t.setLastName(res.getString("last_name"));
+				t.setGender(res.getString("gender"));
+				t.setBirthDate(res.getDate("birth_date"));
+				t.setStaffPosition(res.getInt("staff_position_id"));
+				t.setHighestDiploma(res.getString("highest_diploma"));
+				t.setCountry(res.getString("country"));
+				t.setCity(res.getString("city"));
+				t.setAdress(res.getString("adress"));
+				t.setNationality(res.getString("nationality"));
+				t.setTel1(res.getString("tel1"));
+				t.setTel2(res.getString("tel2"));
+				t.setEmail(res.getString("email"));
+				t.setSkype(res.getString("skype"));
+				t.setUserId(res.getInt("user_id"));
+				t.setCreatedBy(res.getInt("created_by"));
+				t.setCreatedOn(res.getDate("created_on"));
+				t.setModifiedBy(res.getInt("modified_by"));
+				t.setModifiedOn(res.getDate("modified_on"));
+				t.setDeleted(res.getBoolean("deleted"));
+								
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				res.close();
+				st.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return t;
+	}
+	
 	public List<Teacher> findAllTeachers() {
 		List<Teacher> teachers = new ArrayList<Teacher>();
 		

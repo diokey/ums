@@ -8,7 +8,9 @@
 	<ui:define name="title">
        	Course Catalog
    	</ui:define>
-
+	<ui:define name="mainMenu">
+		<ui:include src="/includes/staffMenu.xhtml" />
+	</ui:define>
 	<ui:define name="breadcrumb">
 		<h:form>
 			<p:breadCrumb styleClass="fix-breadcrumb">
@@ -30,7 +32,7 @@
 				<f:facet name="header">
 					Course List  
 		            <p:outputPanel style="float:right">  
-		                <p:outputLabel value="Search all fields:" />  
+		                <h:outputText value="Search all fields:" />  
 		                <p:inputText id="globalFilter" onkeyup="PF('courseTable').filter()" style="width:150px" />  
 		            </p:outputPanel>
 		            <div style="clear:both;"></div>  

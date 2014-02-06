@@ -6,6 +6,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.gs.dao.PermissionDAO;
 import org.gs.dao.UserDAO;
 import org.gs.model.Role;
 import org.gs.model.User;
@@ -59,6 +60,7 @@ public class LoginBean implements Serializable{
 			}else {
 				//if user is not banned.
 				//redirect him according to his profil;
+				System.out.println("role : "+this.user.getUserRole());
 				if(user.getUserRole()==null) {
 					
 					String msgText = RessourceBundleUtil.getMessage("unkonwRedirectPath");
@@ -98,6 +100,10 @@ public class LoginBean implements Serializable{
 					String msgText = "Login Successful for user "+this.user.getUsername();
 					
 					AppLoger.log(Constantes.INFO,msgText);
+					
+					// keep user permissions in the session
+					PermissionDAO permissionDao = new PermissionDAO();
+					this.user.setPermissions(permissionDao.findRolePermission(user.getUserId()));
 					
 					FacesUtil.setSessionAttribute(Constantes.CONNECTED_USER, this.user);
 					

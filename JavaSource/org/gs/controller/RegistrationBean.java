@@ -125,6 +125,8 @@ public class RegistrationBean {
 		this.studentDao = new StudentDAO();
 		
 		this.newUser = new User();
+		
+		
 	}
 
 	

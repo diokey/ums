@@ -1,0 +1,48 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="title">
+       	#{uiMessages.addTeacher}
+   	</ui:define>
+	<ui:define name="mainMenu">
+		<ui:include src="/includes/staffMenu.xhtml" />
+	</ui:define>
+	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem value="#{uiMessages.home}" url="/"/>
+				<p:menuitem value="#{uiMessages.teachers}" url="#"/>
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>
+	
+    <ui:define name="main">
+    	<h:form>
+    		<p:dataTable value="#{teacherBean.teachers}" var="teacher">
+    			<f:facet name="header">#{uiMessages.teacherList}</f:facet>
+    			<p:column headerText="First Name">
+    				#{teacher.firstName}
+    			</p:column>
+    			<p:column headerText="Middle Name">
+    				#{teacher.middleName}
+    			</p:column>
+    			<p:column headerText="Last Name">
+    				#{teacher.lastName}
+    			</p:column>
+    			<p:column headerText="Gender">
+    				#{teacher.gender}
+    			</p:column>
+    			<p:column headerText="Nationality">
+    				#{teacher.nationality}
+    			</p:column>
+    			<p:column headerText="Diploma">
+    				#{teacher.highestDiploma}
+    			</p:column>
+    		</p:dataTable>
+    	</h:form>
+   	</ui:define>
+ </ui:composition>

@@ -17,5 +17,9 @@ public class Constantes {
     public static final String WARNING = "Warning";
     public static final String INFO = "Info";
     public static final String CRITICAL = "Critical";
+    
+    public static final String ACTIF = "active";
+    public static final String INACTIF = "inactive";
+    public static final String DELETED = "deleted";
 
 }

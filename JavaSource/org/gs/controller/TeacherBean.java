@@ -27,7 +27,6 @@ import org.gs.util.Constantes;
 import org.gs.util.FacesUtil;
 import org.gs.util.HashUtil;
 import org.gs.util.RessourceBundleUtil;
-import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 
 @ManagedBean

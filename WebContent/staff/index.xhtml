@@ -1,0 +1,18 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:define name="title">
+        UMS 
+    </ui:define>
+	<ui:define name="mainMenu">
+		<ui:include src="/includes/staffMenu.xhtml" />
+	</ui:define>
+    <ui:define name="main">
+        <h1>Welcome to UMS(University Management System)</h1>
+        <h3>You are logged in as </h3>
+        <h5>Proudly powered by geeksolution</h5>
+    </ui:define>
+</ui:composition>

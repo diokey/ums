@@ -54,8 +54,8 @@ public class Role {
 	private int roleId;
 	private String roleName;
 	private String roleDescription;
-	private boolean buildIn;
-	private boolean canDelete;
-	private String loginDestination;
+	private boolean buildIn = false;
+	private boolean canDelete = true;
+	private String loginDestination = "/";
 	private boolean deleted;
 }

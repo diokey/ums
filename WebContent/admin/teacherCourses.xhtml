@@ -13,7 +13,8 @@
 		<h:form>
 			<p:breadCrumb styleClass="fix-breadcrumb">
 				<p:menuitem value="#{uiMessages.home}" url="/"/>
-				<p:menuitem value="#{uiMessages.teachers}" url="#"/>
+				<p:menuitem value="#{uiMessages.teachers}" url="/admin/teacherList.xhtml"/>
+				<p:menuitem value="Teacher Course" url="#"></p:menuitem>
 			</p:breadCrumb>
 		</h:form>	
 	</ui:define>
@@ -41,49 +42,63 @@
     				#{teacher.highestDiploma}
     			</p:column>
     			<p:column headerText="Courses">
-    				<p:commandLink value="Courses" action="#{teacherCourseBean.findTeacherCourses}" update=":courseDialog" oncomplete="PF('courseDialog').show()">
+    				<p:commandLink value="Manage" action="#{teacherCourseBean.findTeacherCourses}" update=":courseDialog" oncomplete="PF('courseDialog').show()">
     					<f:setPropertyActionListener target="#{teacherCourseBean.currentTeacher}" value="#{teacher}"/>
     				</p:commandLink>
     			</p:column>
     		</p:dataTable>
     	</h:form>
     	
-    	<p:dialog id="courseDialog" resizable="false" width="500" widgetVar="courseDialog" header="Teacher courses" closable="true">
-    		<p:dataTable value="#{teacherCourseBean.currentTeacher.lectures}" var="classCourse" styleClass="fix-parent-panel">
-    			<f:facet name="header">
-    				Course taught by #{teacherCourseBean.currentTeacher.firstName} #{teacherCourseBean.currentTeacher.middleName} #{teacherCourseBean.currentTeacher.lastName}
-    			</f:facet>
-    			<p:column headerText="Course name">
-    				#{classCourse.course.courseName}
-    			</p:column>
-    			<p:column headerText="Description">
-    				#{empty classCourse.courseDescription?classCourse.course.courseDescription:classCourse.courseDescription}
-    			</p:column>
-    			<p:column headerText="Credits">
-    				#{classCourse.credits}
-    			</p:column>
-    			<p:column headerText="Action">
-   					<p:commandLink><span class="ui-icon ui-icon-trash" title="Delete"></span></p:commandLink>
-    			</p:column>
-    		</p:dataTable>
+    	<p:dialog id="courseDialog" style="max-height:500px; overflow:auto;" resizable="false" width="500" widgetVar="courseDialog" header="Teacher courses" closable="true">
+    		<form id="tableCourseForm">
+	    		<p:dataTable id="teacherCourses" value="#{teacherCourseBean.currentTeacher.lectures}" var="classCourse" styleClass="fix-parent-panel">
+	    			<f:facet name="header">
+	    				Course taught by #{teacherCourseBean.currentTeacher.firstName} #{teacherCourseBean.currentTeacher.middleName} #{teacherCourseBean.currentTeacher.lastName}
+	    			</f:facet>
+	    			<p:column headerText="Course name">
+	    				#{classCourse.course.courseName}
+	    			</p:column>
+	    			<p:column headerText="Description">
+	    				#{empty classCourse.courseDescription?classCourse.course.courseDescription:classCourse.courseDescription}
+	    			</p:column>
+	    			<p:column headerText="Credits">
+	    				#{classCourse.credits}
+	    			</p:column>
+	    			<p:column headerText="Action">
+	   					<p:commandLink action="#{teacherCourseBean.removeCourse}" update=":teacherCourses"><span class="ui-icon ui-icon-trash" title="Delete"></span>
+	   						<f:setPropertyActionListener target="#{teacherCourseBean.removedCourse}" value="#{classCourse}" />
+	   					</p:commandLink>
+	    			</p:column>
+	    		</p:dataTable>
+    		</form>
     		<p:outputPanel styleClass="fix-parent-panel">
-    			<p:button icon="ui-icon-add" value="Add Course"></p:button>
+    			<p:button id="icon-button" icon="ui-icon-add" onclick="$('#addCoursePanel').css('display')=='none'?$('#addCoursePanel').show():$('#addCoursePanel').hide(); return false;" value="Add Course"></p:button>
     		</p:outputPanel>
-    		<p:panel styleClass="fix-parent-panel">
-    			<h:panelGrid columns="2">
-    				<p:outputLabel for="classes">Class</p:outputLabel>    					
-    				<p:selectOneMenu id="classes" >
-    					<f:selectItems value="#{teacherCourseBean.classes}" var="classe" itemLabel="#{classe.title}" itemValue="#{classe.id}" itemDescription="#{classe.description}"/>
-    				</p:selectOneMenu>
-    				<p:outputLabel for="courses">Courses</p:outputLabel>
-					<p:selectOneMenu id="courses">
-						<f:selectItems value="#{teacherCourseBean.classCourses}" var="classeCourse" itemLabel="#{classeCourse.course.courseName}" itemValue="#{classeCourse.classCourseId}" itemDescription="#{classeCourse.courseDescription}"/>
-					</p:selectOneMenu>
-					<p:outputPanel styleClass="fix-parent-panel center-text">
-						<p:commandButton value="Add"></p:commandButton>
-					</p:outputPanel>
-				</h:panelGrid>
-    		</p:panel>
+    		<p:outputPanel id="addCoursePanel" style="display:none;">
+	    		<p:panel styleClass="fix-parent-panel">
+	    			<h:form>
+		    			<h:panelGrid columns="2">
+		    				<p:outputLabel for="classes">Class</p:outputLabel>    					
+		    				<p:selectOneMenu id="classes" valueChangeListener="#{teacherCourseBean.onClassChanged}">
+		    					<f:selectItems value="#{teacherCourseBean.classes}" var="classe" 
+		    					itemLabel="#{classe.title}" itemValue="#{classe.id}" itemDescription="#{classe.description}"/>
+		    					<p:ajax event="change" update="courses"></p:ajax>
+		    				</p:selectOneMenu>
+		    				<p:outputLabel for="courses">Courses</p:outputLabel>
+							<p:selectOneMenu id="courses" value="#{teacherCourseBean.selectedClassCourse.classCourseId}">
+								<f:selectItems value="#{teacherCourseBean.classCourses}" var="classeCourse" itemLabel="#{classeCourse.course.courseName}" itemValue="#{classeCourse.classCourseId}" itemDescription="#{classeCourse.courseDescription}"/>
+							</p:selectOneMenu>
+							<p:outputPanel styleClass="fix-parent-panel center-text">
+								<p:commandButton value="Add" action="#{teacherCourseBean.addNewCourse}" update="@form,:teacherCourses"></p:commandButton>
+							</p:outputPanel>
+						</h:panelGrid>
+					</h:form>
+	    		</p:panel>
+	    		<p:outputPanel styleClass="center-text">
+	    			<p:commandButton value="Save" oncomplete="$('#addCoursePanel').hide();" action="#{teacherCourseBean.saveTeacherCourses}" update=":messages"></p:commandButton>
+	    		</p:outputPanel>
+	    		
+    		</p:outputPanel>
     	</p:dialog>
    	</ui:define>
  </ui:composition>

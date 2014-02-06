@@ -7,78 +7,77 @@
 
 	 <h:form>
          <p:menubar>
-           <p:submenu label="Students" icon="ui-icon-document">
-                 <p:menuitem value="Registration" icon="ui-icon-contact" url="/admin/student_registration.xhtml"></p:menuitem>
-                 <p:menuitem value="Enrollment" url="/admin/enrollement.xhtml" />
-                 <p:menuitem value="Students List" url="/admin/students.xhtml" />
-                 <p:menuitem value="Marks" url="/admin/studentMarks.xhtml"></p:menuitem>
-                 <p:menuitem value="Settings" url="#" />
+           <p:submenu label="Students" rendered="#{renderBean.hasAccess('Student.Menu.Access')}" icon="ui-icon-document">
+                 <p:menuitem value="Registration" rendered="#{renderBean.hasAccess('Student.Registration.Add')}" icon="ui-icon-contact" url="/admin/student_registration.xhtml"></p:menuitem>
+                 <p:menuitem value="Enrollment" rendered="#{renderBean.hasAccess('Student.Enrollment.Add')}" url="/admin/enrollement.xhtml" />
+                 <p:menuitem value="Students List" rendered="#{renderBean.hasAccess('Student.StudentList.View')}" url="/admin/students.xhtml" />
+                 <p:menuitem value="Marks" rendered="#{renderBean.hasAccess('Student.Marks.View')}" url="/admin/studentMarks.xhtml"></p:menuitem>
+                 <p:menuitem value="Settings" rendered="#{renderBean.hasAccess('Student.Settings.View')}" url="#" />
              </p:submenu>
 
-             <p:submenu label="Staff" icon="ui-icon-pencil">
+             <p:submenu label="Staff" icon="ui-icon-pencil" rendered="#{renderBean.hasAccess('Staff.Menu.Access')}">
              	<p:submenu label="Teachers">
-             		<p:menuitem value="Add new" url="/admin/teacher.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>
-             		<p:menuitem value="Teacher's List" url="/admin/teacherList.xhtml"></p:menuitem>
-             		<p:menuitem value="Manage course" url="/admin/teacherCourses.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>
+             		<p:menuitem value="Add new" rendered="#{renderBean.hasAccess('Staff.Teacher.Add')}" url="/admin/teacher.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>
+             		<p:menuitem value="Teacher's List" rendered="#{renderBean.hasAccess('Staff.TeacherList.View')}" url="/admin/teacherList.xhtml"></p:menuitem>
+             		<p:menuitem value="Manage course" rendered="#{renderBean.hasAccess('Staff.ManageCourse.View')}" url="/admin/teacherCourses.xhtml" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>
              	</p:submenu>
                  
-                 <p:menuitem value="Others" url="#" icon="ui-icon-arrowreturnthick-1-e"></p:menuitem>
-             	<p:menuitem value="Manage Positions" url="#" />
-                 <p:menuitem value="Manage Category" url="#" />
+                 <p:menuitem value="Others" rendered="#{renderBean.hasAccess('Staff.Others.View')}" url="#" icon="ui-icon-arrowreturnthick-1-e"></p:menuitem>
+             	<p:menuitem value="Manage Positions" rendered="#{renderBean.hasAccess('Staff.ManagePosition.View')}" url="#" />
+                 <p:menuitem value="Manage Category" rendered="#{renderBean.hasAccess('Staff.ManageCategory.View')}" url="#" />
              </p:submenu>
 
-             <p:submenu label="Courses" icon="ui-icon-help">
-                 <p:menuitem value="Course Catalog" url="/admin/courseCatalog.xhtml"/>
-                 <p:submenu label="Course Manager" icon="ui-icon-search">                                
-                     <p:menuitem value="Assign course to classes" url="/admin/classCourses.xhtml" styleClass="nowrap"/>                                
-                     <p:menuitem value="Assing course to teachers" url="#" styleClass="nowrap"/>
+             <p:submenu label="Courses" icon="ui-icon-help" rendered="#{renderBean.hasAccess('Courses.Menu.Access')}">
+                 <p:menuitem rendered="#{renderBean.hasAccess('Courses.CourseCatalog.View')}" value="Course Catalog" url="/admin/courseCatalog.xhtml"/>
+                 <p:submenu label="Course Manager" icon="ui-icon-search" rendered="#{renderBean.hasAccess('Courses.CourseManager.View')}">                                
+                     <p:menuitem value="Assign course to classes" rendered="#{renderBean.hasAccess('Courses.AssignCourseToClasses.View')}" url="/admin/classCourses.xhtml" styleClass="nowrap"/>                                
+                     <p:menuitem value="Assing course to teachers" rendered="#{renderBean.hasAccess('Courses.AssignCourseToTeachers.View')}" url="/admin/teacherCourses.xhtml" styleClass="nowrap"/>
                  </p:submenu>
              </p:submenu>
              
              <p:submenu label="Scheduling" icon="ui-icon-help">
-                 <p:menuitem value="Administrative tasks" url="#" />
-                 <p:menuitem value="Exams" url="#" />
-                 <p:menuitem value="Lectures" url="#" />                 
+                 <p:menuitem rendered="#{renderBean.hasAccess('Scheduling.AdministrativeTasks.View')}" value="Administrative tasks" url="#" />
+                 <p:menuitem rendered="#{renderBean.hasAccess('Scheduling.Exams.View')}" value="Exams" url="#" />
+                 <p:menuitem rendered="#{renderBean.hasAccess('Scheduling.Lectures.View')}" value="Lectures" url="#" />                 
              </p:submenu>
              <p:submenu label="Attendances" icon="ui-icon-help">
-                 <p:menuitem value="Teachers" url="#" />
-                 <p:menuitem value="Staff" url="#" />
-                 <p:menuitem value="Students" url="#" />                 
+                 <p:menuitem rendered="#{renderBean.hasAccess('Attendances.Teachers.View')}" value="Teachers" url="#" />
+                 <p:menuitem rendered="#{renderBean.hasAccess('Attendances.Staff.View')}" value="Staff" url="#" />
+                 <p:menuitem rendered="#{renderBean.hasAccess('Attendances.Students.View')}" value="Students" url="#" />                 
              </p:submenu>
              
              <p:submenu label="Evaluations" icon="ui-icon-help">
-                 <p:menuitem value="Homework" url="#" />
-                 <p:menuitem value="#{uiMessages.examination}" url="/admin/examination.xhtml" />                
+                 <p:menuitem value="Homework" url="#" rendered="#{renderBean.hasAccess('Evaluations.Homework.View')}" />
+                 <p:menuitem value="#{uiMessages.examination}" rendered="#{renderBean.hasAccess('Evaluations.Examination.View')}" url="/admin/examination.xhtml" />                
              </p:submenu>
              
              <p:submenu label="Fees" icon="ui-icon-help">
-                 <p:menuitem value="Fee category" url="#" />
-                 <p:menuitem value="Fees collection" url="#" />
-                 <p:menuitem value="Homework" url="#" />
-                 <p:menuitem value="Settings" url="#" />
+                 <p:menuitem value="Fee category" rendered="#{renderBean.hasAccess('Fees.FeeCategory.View')}" url="#" />
+                 <p:menuitem value="Fees collection" rendered="#{renderBean.hasAccess('Fees.FeeCollection.View')}" url="#" />
+                 <p:menuitem value="Homework" url="#" rendered="#{renderBean.hasAccess('Fees.Homework.View')}"/>
+                 <p:menuitem value="Settings" url="#" rendered="#{renderBean.hasAccess('Fees.Settings.View')}"/>
              </p:submenu>
              
-             <p:submenu label="Transcripts" icon="ui-icon-help">
-                 <p:menuitem value="Student transcript" url="/admin/studentTranscript.xhtml" />
-                 <p:menuitem value="Course transcript" url="#" />
-                 <p:submenu label="Settings" icon="ui-icon-search">
-                    	<p:menuitem value="Report card Grades" url="#" />
-                     <p:menuitem value="GPA" url="#" />
+             <p:submenu label="Transcript" icon="ui-icon-help">
+                 <p:menuitem value="Student transcript" rendered="#{renderBean.hasAccess('Transcript.StudentTranscript.View')}" url="/admin/studentTranscript.xhtml" />
+                 <p:menuitem value="Course transcript" rendered="#{renderBean.hasAccess('Transcript.CourseTranscript.View')}" url="#" />
+                 <p:submenu label="Settings" icon="ui-icon-search" rendered="#{renderBean.hasAccess('Transcript.Settings.View')}">
+                    <p:menuitem value="Report card Grades" rendered="#{renderBean.hasAccess('Transcript.Settings.ReportGrade.View')}" url="#" />
+                    <p:menuitem value="GPA" url="#" rendered="#{renderBean.hasAccess('Transcript.Settings.GPA.View')}"/>
                  </p:submenu>
              </p:submenu>
              
              <p:submenu label="Users" icon="ui-icon-help">
-                 <p:menuitem value="Add users" url="#" />
-                 <p:menuitem value="Role" url="#" />
-                 <p:menuitem value="Permissions" url="#" />
+                 <p:menuitem value="Add users" url="#" rendered="#{renderBean.hasAccess('Users.user.Add')}" />                 
+                 <p:menuitem value="Permissions" rendered="#{renderBean.hasAccess('Users.Permission.View')}" url="/admin/permissions.xhtml" />
                  
              </p:submenu>
              <p:submenu label="Setttings" icon="ui-icon-pencil">
-                 <p:menuitem value="School" url="#" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>
-                 <p:menuitem value="School Year" url="#"></p:menuitem>
-                 <p:menuitem value="Period" url="#" icon="ui-icon-arrowreturnthick-1-e"></p:menuitem>
-             	<p:menuitem value="Grades" url="#"></p:menuitem>
-             	<p:menuitem value="Structure" url="#"></p:menuitem>
+                 <p:menuitem value="School" url="#" rendered="#{renderBean.hasAccess('Settings.School.View')}" icon="ui-icon-arrowreturnthick-1-w"></p:menuitem>
+                 <p:menuitem value="School Year" rendered="#{renderBean.hasAccess('Settings.SchoolYear.View')}" url="#"></p:menuitem>
+                 <p:menuitem value="Period" url="#" rendered="#{renderBean.hasAccess('Settings.Period.View')}" icon="ui-icon-arrowreturnthick-1-e"></p:menuitem>
+             	<p:menuitem value="Grades" rendered="#{renderBean.hasAccess('Settings.Grades.View')}" url="#"></p:menuitem>
+             	<p:menuitem value="Structure" rendered="#{renderBean.hasAccess('Settings.Structure.View')}" url="#"></p:menuitem>
              </p:submenu>
              
              <p:submenu icon="ui-icon-person" style="float:right" label="#{userBean.user.username}" rendered="#{userBean.connected}">

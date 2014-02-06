@@ -1,0 +1,52 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+      
+    <ui:define name="title">
+       	#{uiMessages.students}
+   	</ui:define>
+	<ui:define name="mainMenu">
+		<ui:include src="/includes/staffMenu.xhtml" />
+	</ui:define>
+	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem value="#{uiMessages.home}" url="/"/>
+				<p:menuitem value="#{uiMessages.students}" url="#"/>
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>
+	
+    <ui:define name="main">    	
+    	<h:form styleClass="fix-parent-panel">
+    		<p:dataTable value="#{registrationBean.registrations}" var="registration">
+    			<f:facet name="header">Students Registered in <b>#{schoolTreeBean.selectedTreeNodeString}</b></f:facet>
+    			<p:column headerText="RegistrationId">
+    				<h:outputText value="#{registration.registrationId}" />
+    			</p:column>
+    			<p:column headerText="Names">
+    				<h:outputText value="#{registration.student.name} " />
+    				<h:outputText value="#{registration.student.middleName} " />
+    				<h:outputText value="#{registration.student.lastName}" />
+    			</p:column>
+    			<p:column headerText="Gender">
+    				<h:outputText value="#{registration.student.gender}" />
+    			</p:column>
+    			<p:column headerText="Marital Status">
+    				<h:outputText value="#{registration.student.maritalStatus}" />
+    			</p:column>
+    			<p:column headerText="Registration date">
+    				<h:outputText value="#{registration.createdOn}" />
+    			</p:column>
+    			<p:column headerText="Comment">
+    				<h:outputText value="#{registration.comment}" />
+    			</p:column>
+    		</p:dataTable>
+    	</h:form>
+   	</ui:define>
+      
+</ui:composition>

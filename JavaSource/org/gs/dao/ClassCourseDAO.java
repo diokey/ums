@@ -296,6 +296,7 @@ public class ClassCourseDAO extends DAO<ClassCourse>{
 			res = pst.executeQuery();
 			
 			while(res.next()) {
+				System.out.println(" Class course id : "+res.getInt("classe_course_id"));
 				ClassCourse c = this.find(res.getInt("classe_course_id"));
 				
 				classCourses.add(c);
@@ -344,5 +345,39 @@ public class ClassCourseDAO extends DAO<ClassCourse>{
 		return courses;
 	}
 
-	 
+	public List<ClassCourse> findClassCourses(int classId, int periodId, int teacherId) {
+		List<ClassCourse> courses = new ArrayList<ClassCourse>();
+		//TODO Takes into consideration periodId to know which period 
+		String sql = "SELECT classe_course_id FROM teacher_course where teacher_id = ? and deleted=?";
+		System.out.println("SELECT classe_course_id FROM teacher_course where teacher_id = "+teacherId+" and deleted=?");
+		PreparedStatement pst = null;
+		ResultSet res = null;
+		
+		try {
+			pst = this.con.prepareStatement(sql);
+			pst.setInt(1, teacherId);
+			//pst.setInt(2, teacherId);
+			pst.setBoolean(2, false);
+			
+			res = pst.executeQuery();
+			
+			while(res.next()) {
+				courses.add(this.find(res.getInt("classe_course_id")));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return courses;
+	} 
 }
