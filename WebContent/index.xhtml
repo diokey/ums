@@ -22,11 +22,13 @@
 
         <h:body>
         	<div id="login-container">
+        		<h:messages showDetail="true" autoUpdate="true"></h:messages>
         		<p:panel header="Log in" styleClass="login-panel">
 				<h:form id="loginForm">
 					<h:panelGroup layout="block" style="height:34px; width : 70%;margin:auto;">
 						<p:message id="loginMsg" for="loginBtn"></p:message>
 					</h:panelGroup>
+					
 					<h:panelGrid columns="2">
 						<h:outputLabel value="#{uiMessages.username}" for="username" />
 						<h:panelGroup layout="block">
@@ -37,10 +39,9 @@
 						</h:panelGroup>
 						<h:outputLabel value="#{uiMessages.password}" for="password" />
 						<h:panelGroup layout="block">
-							<p:inputText required="true"
+							<p:password required="true"
 								requiredMessage="Password is required"
-								value="#{loginBean.user.userPassword}" id="password">
-							</p:inputText>
+								value="#{loginBean.user.userPassword}" id="password"></p:password>
 							<p:message id="passwordMsg" for="password"></p:message>
 						</h:panelGroup>
 

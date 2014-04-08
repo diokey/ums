@@ -51,10 +51,19 @@ public class Course {
 		this.createdOn = createdOn;
 	}
 
+	public String getCourseCode() {
+		return courseCode;
+	}
+
+	public void setCourseCode(String courseCode) {
+		this.courseCode = courseCode;
+	}
+
 
 
 	private int courseId;
 	private String courseName;
+	private String courseCode;
 	private String courseDescription;
 	private int schoolId;
 	private int createdBy;

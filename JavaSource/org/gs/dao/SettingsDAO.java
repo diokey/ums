@@ -40,7 +40,7 @@ public class SettingsDAO extends DAO<Settings>{
 	@Override
 	public Settings find(int id) {
 		// TODO Auto-generated method stub
-		String req = "SELECT * FROM Settings where settings_id=?";
+		String req = "SELECT * FROM settings where settings_id=?";
 		
 		ResultSet res = null;
 		PreparedStatement pst = null;
@@ -82,7 +82,7 @@ public class SettingsDAO extends DAO<Settings>{
 	
 	public Settings find(String name, String lang) {
 		
-		String req = "SELECT * FROM Settings where name=? and language=?";
+		String req = "SELECT * FROM settings where name=? and language=?";
 		
 		ResultSet res = null;
 		PreparedStatement pst = null;

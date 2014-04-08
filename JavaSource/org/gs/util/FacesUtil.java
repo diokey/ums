@@ -7,6 +7,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -26,6 +27,38 @@ public class FacesUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static void redirect(String path, String messageText) {
+		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+		try {
+			
+			//keep flash messages, otherwise it will get lost after page redirect
+			
+			keepFlashMessages();
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,messageText,messageText);	
+			
+			FacesUtil.addMessage(null, message);
+			
+			
+			context.redirect(context.getRequestContextPath() + path);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void keepFlashMessages() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		Flash flash = context.getExternalContext().getFlash();
+		flash.setKeepMessages(true);
+		flash.setRedirect(true);
+	}
+	
+	public static void unsetFlashMessages() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		context.getExternalContext().getFlash().setKeepMessages(false);
 	}
 	
 	public static HttpServletRequest getRequest() {

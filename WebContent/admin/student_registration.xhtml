@@ -45,7 +45,7 @@
    					<p:message for="gender"></p:message>
    					
    					<p:outputLabel value="#{uiMessages.birthdate}" for="birthdate"/>
-   					<p:calendar id="birthdate" value="#{registrationBean.newStudent.birthDate}" pattern="mm-dd-yyyy"></p:calendar>
+   					<p:calendar id="birthdate" navigator="true" yearRange="c-100:c" value="#{registrationBean.newStudent.birthDate}" pattern="mm-dd-yyyy"></p:calendar>
    					<p:message for="birthdate"></p:message>
    					
    					<p:outputLabel value="#{uiMessages.nationality}" for="nationality"/>

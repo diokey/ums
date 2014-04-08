@@ -11,9 +11,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 
+import org.gs.dao.ProgramDAO;
 import org.gs.dao.SchoolDAO;
 import org.gs.dao.StructureDAO;
 import org.gs.model.MyTreeNodeModel;
+import org.gs.model.Program;
 import org.gs.model.School;
 import org.gs.model.SchoolPeriod;
 import org.gs.model.SchoolYear;
@@ -33,19 +35,32 @@ public class SchoolTreeBean implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	public void onSchoolProgramChanged(ValueChangeEvent event) {
+		int schoolProgramId = 0;
+		if(event==null || event.getNewValue()==null)
+			return;
+		
+		schoolProgramId = Integer.parseInt(""+event.getNewValue());
+		
+		this.selectedProgram = this.findSelectedProgram(schoolProgramId);
+	}
 	
 	public void onSchoolChanged(ValueChangeEvent event) {
 		if(event==null || event.getNewValue()==null)
 			return;
 		int schoolId = 0;
+		schoolId = Integer.parseInt(""+event.getNewValue());
 		
 		this.selectedSchool = this.findSelectedSchool(schoolId);
 	}
 	
 	public void onSchoolYearChanged(ValueChangeEvent event) {
+		int schoolYearId = 0;
 		if(event==null || event.getNewValue()==null)
 			return;
-		int schoolYearId = 0;
+		
+		schoolYearId = Integer.parseInt(""+event.getNewValue());
+		
 		
 		this.selectedSchoolYear = this.findSelectedSchoolYear(schoolYearId);
 	}
@@ -62,6 +77,15 @@ public class SchoolTreeBean implements Serializable{
 		System.out.println("Changed to : "+this.selectedSchoolPeriod.getSchoolPeriodId());
 	}
 	
+	public Program findSelectedProgram(int programId) {
+		
+		for (Program pro : this.schoolPrograms) {
+			
+			if(pro.getProgramId() == programId)
+				return pro;
+		}
+		return null;
+	}
 	public SchoolPeriod findSelectedPeriod(int periodId) {
 		SchoolPeriod sp = null;
 		
@@ -350,6 +374,8 @@ public class SchoolTreeBean implements Serializable{
 							if(this.selectedSchoolPeriod==null) {
 								this.selectedSchoolPeriod = new SchoolPeriod();
 							}
+							
+							
 						}else{
 							this.selectedSchoolPeriod = new SchoolPeriod();
 						}
@@ -365,7 +391,15 @@ public class SchoolTreeBean implements Serializable{
 			}
 		} else {
 			this.selectedSchool = new School();
+			
 		}
+		
+		this.schoolPrograms = new ProgramDAO().findAll();
+		
+		if(this.schoolPrograms!=null && ! this.schoolPrograms.isEmpty())
+			this.selectedProgram = this.schoolPrograms.get(0);
+		else
+			this.selectedProgram = new Program();
 		
 	}
 	
@@ -474,9 +508,21 @@ public class SchoolTreeBean implements Serializable{
 		this.selectedSchoolPeriod = selectedSchoolPeriod;
 	}
 
+	public List<Program> getSchoolPrograms() {
+		return schoolPrograms;
+	}
 
+	public void setSchoolPrograms(List<Program> schoolPrograms) {
+		this.schoolPrograms = schoolPrograms;
+	}
 
+	public Program getSelectedProgram() {
+		return selectedProgram;
+	}
 
+	public void setSelectedProgram(Program selectedProgram) {
+		this.selectedProgram = selectedProgram;
+	}
 
 	private TreeNode root ;
 	private TreeNode selectedNode;
@@ -487,8 +533,10 @@ public class SchoolTreeBean implements Serializable{
 	private List<School> schools;
 	private List<SchoolYear> schoolYears;
 	private List<SchoolPeriod> schoolPeriods;
-	private School selectedSchool;
+	private List<Program> schoolPrograms;
+ 	private School selectedSchool;
 	private SchoolYear selectedSchoolYear;
 	private SchoolPeriod selectedSchoolPeriod;
+	private Program selectedProgram;
 
 }

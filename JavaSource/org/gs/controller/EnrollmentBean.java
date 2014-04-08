@@ -11,6 +11,7 @@ import javax.faces.bean.ViewScoped;
 import org.gs.dao.RegistrationDAO;
 import org.gs.dao.StructureDAO;
 import org.gs.layout.SchoolTreeBean;
+import org.gs.model.Program;
 import org.gs.model.Registration;
 import org.gs.model.School;
 import org.gs.model.SchoolPeriod;
@@ -19,6 +20,7 @@ import org.gs.model.Structure;
 import org.gs.model.User;
 import org.gs.util.Constantes;
 import org.gs.util.FacesUtil;
+import org.gs.util.RessourceBundleUtil;
 
 @ManagedBean
 @ViewScoped
@@ -38,7 +40,7 @@ public class EnrollmentBean {
 		for(Registration r : this.selectedRegistrations) {
 			r.setCreatedBy(u.getUserId());
 			r.setModifiedBy(u.getUserId());
-			
+			r.setProgramId(this.selectedProgram.getProgramId());
 			r.setClassId(this.enrollClass.getId());
 			r.setPeriodId(this.selectedSchoolPeriod.getSchoolPeriodId());		
 						
@@ -56,10 +58,22 @@ public class EnrollmentBean {
 	}
 	
 	public EnrollmentBean() {
-		// TODO Auto-generated constructor stub
+		
+		//First of all check if the user has access to this page.
+    	// Meaning if the user is connected.
+    	// TODO Should possibly check some other user right
+    	
+    	
+		User u = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
+		if(u==null)
+			FacesUtil.redirect("/",RessourceBundleUtil.getMessage("notConnected"));
+		
+    	//-------------------- end checking connection checkings--------------------------------
+		
 		this.selectedSchool = new School();
 		this.selectedSchoolPeriod = new SchoolPeriod();
 		this.selectedSchoolYear = new SchoolYear();
+		this.selectedProgram = new Program();
 		this.enrollClass = new Structure();
 		
 		this.registrationDao = new RegistrationDAO();
@@ -72,10 +86,11 @@ public class EnrollmentBean {
 		
 		Structure s = this.schoolTreeBean.getSelectedNodeData();
 		SchoolPeriod sp = this.schoolTreeBean.getSelectedSchoolPeriod();
+		Program program = this.schoolTreeBean.getSelectedProgram();
 		
 		this.enrollClass = s;
-		
-		this.registeredStudents = this.registrationDao.classRegistrations(s.getId(), sp.getSchoolPeriodId());
+		this.selectedProgram = program;
+		this.registeredStudents = this.registrationDao.classRegistrations(s.getId(), sp.getSchoolPeriodId(), program.getProgramId());
 		this.classes = this.structureDao.getClassHierarchy(Constantes.CURRENT_SCHOOL);
 	}
 	
@@ -145,6 +160,14 @@ public class EnrollmentBean {
 		this.enrollClass = enrollClass;
 	}
 
+	public Program getSelectedProgram() {
+		return selectedProgram;
+	}
+
+	public void setSelectedProgram(Program selectedProgram) {
+		this.selectedProgram = selectedProgram;
+	}
+
 
 
 
@@ -156,6 +179,7 @@ public class EnrollmentBean {
 	private School selectedSchool;
 	private SchoolYear selectedSchoolYear;
 	private SchoolPeriod selectedSchoolPeriod;
+	private Program selectedProgram;
 
 	private List<Registration> registeredStudents;
 	private List<Registration> selectedRegistrations;

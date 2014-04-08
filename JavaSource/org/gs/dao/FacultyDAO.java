@@ -37,7 +37,7 @@ public class FacultyDAO extends DAO<Faculty> {
 		// TODO Auto-generated method stub
 		ResultSet res = null;
 		try {
-			PreparedStatement statement = this.con.prepareStatement("SELECT * FROM Faculte where id=?");
+			PreparedStatement statement = this.con.prepareStatement("SELECT * FROM faculte where id=?");
 			statement.setInt(1, id);
 			
 			res = statement.executeQuery();

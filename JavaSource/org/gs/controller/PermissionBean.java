@@ -15,6 +15,8 @@ import org.gs.dao.RolePermissionDAO;
 import org.gs.model.Permission;
 import org.gs.model.Role;
 import org.gs.model.RolePermission;
+import org.gs.model.User;
+import org.gs.util.Constantes;
 import org.gs.util.FacesUtil;
 import org.gs.util.RessourceBundleUtil;
 import org.primefaces.event.RowEditEvent;
@@ -29,8 +31,6 @@ public class PermissionBean {
 	
 	public void onPermissionEdit(RowEditEvent event) {
 		Permission  permission = (Permission) event.getObject();
-		
-		System.out.println("Permssion "+permission.getName()+" and "+permission.getDescription());
 		
 		PermissionDAO pdao = new PermissionDAO();
 		FacesMessage message = null;
@@ -201,7 +201,18 @@ public class PermissionBean {
 	}
 
 	public PermissionBean() {
-		// TODO Auto-generated constructor stub
+		
+		//First of all check if the user has access to this page.
+    	// Meaning if the user is connected.
+    	// TODO Should possibly check some other user right
+    	
+    	
+		User u = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
+		if(u==null)
+			FacesUtil.redirect("/",RessourceBundleUtil.getMessage("notConnected"));
+		
+    	//-------------------- end checking connection checkings--------------------------------
+		
 		this.newRole = new Role();
 		this.newPermission = new Permission();
 		

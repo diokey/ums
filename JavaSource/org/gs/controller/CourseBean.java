@@ -10,14 +10,41 @@ import javax.faces.context.FacesContext;
 
 import org.gs.dao.CourseDAO;
 import org.gs.model.Course;
+import org.gs.model.User;
+import org.gs.util.Constantes;
+import org.gs.util.FacesUtil;
+import org.gs.util.RessourceBundleUtil;
+import org.primefaces.event.RowEditEvent;
 
 @ManagedBean
 @ViewScoped
 public class CourseBean {
 
+	public void onCourseEdit(RowEditEvent event) {
+		Course course = (Course) event.getObject();
+		
+		CourseDAO cDao = new CourseDAO();
+		
+		FacesMessage message = null;
+		if(cDao.update(course)) {
+			String msg = RessourceBundleUtil.getMessage("recordUpdateSuccessful");
+			message = new FacesMessage(FacesMessage.SEVERITY_INFO,RessourceBundleUtil.getMessage("updateSuccessful"),msg);
+		}else {
+			String msg = RessourceBundleUtil.getMessage("recordUpdateFailed");
+			message = new FacesMessage(FacesMessage.SEVERITY_ERROR,RessourceBundleUtil.getMessage("updateFailed"),msg);
+		}
+		
+		FacesUtil.addMessage(null, message);
+		
+		//this.init();
+	}
+	
+	public void onCourseCancel(RowEditEvent event) {
+		this.init();
+	}
 	
 	public void saveCourse() {
-		System.out.println("Saving now...");
+		
 		this.newCourse.setSchoolId(1);
 		this.newCourse.setCreatedBy(1);
 		this.filteredCourses = new ArrayList<Course>();
@@ -37,14 +64,25 @@ public class CourseBean {
 	
 	
 	public CourseBean() {
-		// TODO Auto-generated constructor stub
+		//First of all check if the user has access to this page.
+    	// Meaning if the user is connected.
+    	// TODO Should possibly check some other user right
+    	
+    	
+		User u = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
+		if(u==null)
+			FacesUtil.redirect("/",RessourceBundleUtil.getMessage("notConnected"));
 		
+    	//-------------------- end checking connection checkings--------------------------------
 		this.newCourse = new Course();
 		cDao = new CourseDAO();
-		this.courseList = cDao.findAll();
-		System.out.println("SIze : "+this.courseList.size());
+		
+		this.init();		
 	}
 
+	private void init() {
+		this.courseList = cDao.findAll();
+	}
 	
 	public Course getNewCourse() {
 		return newCourse;

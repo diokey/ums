@@ -27,8 +27,8 @@ public class RegistrationDAO extends DAO<Registration> {
 	@Override
 	public boolean create(Registration object) {
 		// TODO Auto-generated method stub
-		String sql = "INSERT INTO registration (student_id,class_id,period_id,comment,created_on,created_by,modified_on,modified_by,deleted)"
-				+ " values (?,?,?,?,NOW(),?,NOW(),?,?)";
+		String sql = "INSERT INTO registration (student_id,class_id,period_id,comment,created_on,created_by,modified_on,modified_by,deleted,program_id)"
+				+ " values (?,?,?,?,NOW(),?,NOW(),?,?,?)";
 		PreparedStatement pst = null;
 		boolean rep = false;
 		
@@ -42,6 +42,7 @@ public class RegistrationDAO extends DAO<Registration> {
 			pst.setInt(5, object.getCreatedBy());
 			pst.setInt(6, object.getModifiedBy());
 			pst.setBoolean(7, object.isDeleted());
+			pst.setInt(8, object.getProgramId());
 			
 			rep = pst.executeUpdate()>0;
 			
@@ -122,10 +123,10 @@ public class RegistrationDAO extends DAO<Registration> {
 		return registration;
 	}
 	
-	public List<Registration> classRegistrations(int classId, int periodId) {
+	public List<Registration> classRegistrations(int classId, int periodId, int programId) {
 		List<Registration> registrations = new ArrayList<Registration>();
 		
-		String sql = "SELECT registration_id from registration where class_id=? and period_id=?";
+		String sql = "SELECT registration_id from registration where class_id=? and period_id=? and program_id = ?";
 		
 		ResultSet res = null;
 		PreparedStatement pst = null;
@@ -134,7 +135,7 @@ public class RegistrationDAO extends DAO<Registration> {
 			pst = this.con.prepareStatement(sql);
 			pst.setInt(1, classId);
 			pst.setInt(2, periodId);
-			
+			pst.setInt(3, programId);
 			res = pst.executeQuery();
 			
 			while(res.next()) {

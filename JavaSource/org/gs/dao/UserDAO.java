@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.gs.db.SingletonConnection;
 import org.gs.model.User;
@@ -96,7 +98,7 @@ public class UserDAO extends DAO<User>{
 				selected.setUsername(res.getString("username"));
 				selected.setUserPassword(res.getString("password_hash"));
 				selected.setResetHash(res.getString("reset_hash"));
-				selected.setLastIp(res.getString("last_login"));
+				selected.setLastLogin(res.getString("last_login"));
 				selected.setLastIp(res.getString("last_ip"));
 				selected.setDeleted(res.getBoolean("deleted"));
 				selected.setResetBy(res.getInt("reset_by"));
@@ -143,7 +145,7 @@ public class UserDAO extends DAO<User>{
 				selected.setUsername(res.getString("username"));
 				selected.setUserPassword(res.getString("password_hash"));
 				selected.setResetHash(res.getString("reset_hash"));
-				selected.setLastIp(res.getString("last_login"));
+				selected.setLastLogin(res.getString("last_login"));
 				selected.setLastIp(res.getString("last_ip"));
 				selected.setDeleted(res.getBoolean("deleted"));
 				selected.setResetBy(res.getInt("reset_by"));
@@ -189,7 +191,7 @@ public class UserDAO extends DAO<User>{
 				selected.setUsername(res.getString("username"));
 				selected.setUserPassword(res.getString("password_hash"));
 				selected.setResetHash(res.getString("reset_hash"));
-				selected.setLastIp(res.getString("last_login"));
+				selected.setLastLogin(res.getString("last_login"));
 				selected.setLastIp(res.getString("last_ip"));
 				selected.setDeleted(res.getBoolean("deleted"));
 				selected.setResetBy(res.getInt("reset_by"));
@@ -217,6 +219,57 @@ public class UserDAO extends DAO<User>{
 		
 		
 		return selected;
+	}
+	
+	public List<User> findAll() {
+		List<User> users = new ArrayList<User>(); 
+		String req = "SELECT * FROM users";
+		
+		PreparedStatement pst = null;
+		ResultSet res = null;
+		try {
+			pst = SingletonConnection.getInstance().prepareStatement(req);
+			
+			res = pst.executeQuery();
+			
+			while(res.next()) {
+				
+				User u = new User();
+				u.setUserId(res.getInt("id"));
+				u.setUserRoleId(res.getInt("role_id"));
+				u.setEmail(res.getString("email"));
+				u.setUsername(res.getString("username"));
+				u.setUserPassword(res.getString("password_hash"));
+				u.setResetHash(res.getString("reset_hash"));
+				u.setLastLogin(res.getString("last_login"));
+				u.setLastIp(res.getString("last_ip"));
+				u.setDeleted(res.getBoolean("deleted"));
+				u.setResetBy(res.getInt("reset_by"));
+				u.setBanned(res.getBoolean("banned"));
+				u.setBannedMessage(res.getString("ban_message"));
+				u.setDisplayName(res.getString("display_name"));
+				u.setLanguage(res.getString("language"));
+				u.setActive(res.getBoolean("active"));
+				u.setPasswordIterations(res.getInt("password_iterations"));
+				u.setForcePasswordReset(res.getBoolean("force_password_reset"));
+				u.setUserRole(new RoleDAO().find(u.getUserRoleId()));
+				
+				users.add(u);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return users;
 	}
 	
 }

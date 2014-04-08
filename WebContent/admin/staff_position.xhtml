@@ -1,0 +1,92 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="title">
+       	#{uiMessages.positionInfo}
+   	</ui:define>
+
+	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem value="#{uiMessages.home}" url="/"/>
+				<p:menuitem value="#{uiMessages.positions}" url="#"/>
+				<p:menuitem value="#{uiMessages.addPosition}" />
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>-->
+	
+    <ui:define name="main">
+    	<h:form>	    	
+   				<h:panelGrid columns="3">
+   					<p:outputLabel for="title" value="#{uiMessages.title}" />
+   					<p:inputText id="title" value="#{positionBean.newPosition.positionTitle}" />
+   					<p:message for="title"></p:message>
+   					
+   					<p:outputLabel for="description" value="#{uiMessages.description}" />
+   					<p:inputText id="description" value="#{positionBean.newPosition.positionDescription}" />
+   					<p:message for="description"></p:message>
+   					
+   				   					
+   				</h:panelGrid>
+   			
+		<h:panelGroup layout="block" styleClass="center-text">
+	
+			<p:commandButton value="Cancel" type="reset"></p:commandButton>
+			<p:commandButton value="Save" action="#{positionBean.savePosition()}" update="@form,:messages"></p:commandButton>
+		</h:panelGroup>   	
+    	
+    	<p:spacer></p:spacer>
+   	
+			<p:dataTable id="table" value="#{positionBean.positions}" var="position" paginator="true" rows="10" editable="true">
+					<p:ajax event="rowEdit" listener="#{positionBean.onPositionEdit}" update="table, :messages"/>	
+					<p:ajax event="rowEditCancel" listener="#{positionBean.onRowEditCancel}" update="table"></p:ajax>   							
+					<p:column sortBy="positionTitle" filterBy="positionTitle">
+							<f:facet name="header">Title</f:facet>
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{position.positionTitle}" />
+							</f:facet>
+							
+							<f:facet name="input">
+								<p:inputText value="#{position.positionTitle}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column sortBy="positionDescription" filterBy="positionDescription">
+						<f:facet name="header">Description</f:facet>
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{position.positionDescription}" />
+						   </f:facet>
+						   
+						   <f:facet name="input">
+								<p:inputText value="#{position.positionDescription}" />
+						   </f:facet>
+						</p:cellEditor>
+					</p:column>
+					
+					<p:column>
+		  				<p:rowEditor />
+					</p:column>
+					
+					<p:column width="30">  
+            				<p:commandLink action="#{positionBean.onPositionDeleted(position)}" update="table"><span class="ui-icon ui-icon-trash" title="Delete"></span>
+            			<p:confirm header="Confirmation" message="Are you sure you want to delete this position?" icon="ui-icon-alert"/>	
+            				</p:commandLink>  
+            				
+            			<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">  
+					        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+					        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+					    </p:confirmDialog>  
+    
+        				</p:column>
+			</p:dataTable>
+   			</h:form>
+    </ui:define>
+    
+</ui:composition>

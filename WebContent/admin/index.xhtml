@@ -2,7 +2,8 @@
     xmlns="http://www.w3.org/1999/xhtml"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets">
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
 
     <ui:define name="title">
         UMS 
@@ -10,7 +11,23 @@
 
     <ui:define name="main">
         <h1>Welcome to UMS(University Management System)</h1>
-        <h3>You are logged in as </h3>
-        <h5>Proudly powered by geeksolution</h5>
+        <p:dashboard id="dashboard" model="#{dashBordBean.model}">
+        	<p:panel id="announcements" header="General Anouncements">
+        		<div>
+        			<p>The university has just acquired a new tool for management of the university informations.
+        			</p>
+        			<p>
+        			Coming soon...
+        			</p>        			
+        		</div>
+        	</p:panel>        	
+        	<p:panel id="studentsAnnouncements" header="Anouncements to students">
+        		<div>
+        			<p>Under construction</p>        			
+        		</div>
+        	</p:panel>
+        	
+        </p:dashboard>
+        
     </ui:define>
 </ui:composition>

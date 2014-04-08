@@ -76,28 +76,28 @@
 						<p:ajax event="rowEdit" listener="#{permissionBean.onPermissionEdit}" update=":messages" />
 						<p:ajax event="rowEditCancel" listener="#{permissionBean.onPermissionCancel}" update=":messages" />
 						<f:facet name="header">Permissions</f:facet>
-						<p:column headerText="Role" sortBy="name" filterBy="name">
+						<p:column headerText="Role" sortBy="name" filterBy="name" filterStyle="width:100%">
 							<p:cellEditor>
 								<f:facet name="output">
 									#{permission.name}
 								</f:facet>
 								<f:facet name="input">
-									<h:inputText style="width:100%;" value="#{permission.name}" />
+									<p:inputText style="width:100%;" value="#{permission.name}" />
 								</f:facet>
 							</p:cellEditor>
 						</p:column>
-						<p:column headerText="Description" sortBy="description" filterBy="description">
+						<p:column headerText="Description" sortBy="description" filterBy="description" filterStyle="width:100%">
 							<p:cellEditor>
 								<f:facet name="output">
 									#{permission.description}
 								</f:facet>
 								<f:facet name="input">
-									<h:inputText style="width:100%;" value="#{permission.description}" />
+									<p:inputText style="width:100%;" value="#{permission.description}" />
 								</f:facet>
 							</p:cellEditor>
 						</p:column>
 						<p:column headerText="Status" sortBy="status" filterBy="status" filterMatchMode="exact"
-						filterOptions="#{permissionBean.filterOptions}">
+						filterOptions="#{permissionBean.filterOptions}" filterStyle="width:100%">
 							<p:cellEditor>
 								<f:facet name="output">
 									#{permission.status}

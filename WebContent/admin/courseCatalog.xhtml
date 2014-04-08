@@ -24,9 +24,11 @@
 		
 		<p:outputPanel>
 			<h:form>
-			<p:dataTable value="#{courseBean.courseList}" widgetVar="courseTable" var="course" rows="15" paginator="true" resizableColumns="true"
+			<p:dataTable id="courseTable" value="#{courseBean.courseList}" widgetVar="courseTable" var="course" rows="15" paginator="true" resizableColumns="true"
 			 rowKey="#{course.courseId}" emptyMessage="No course found" filteredValue="#{courseBean.filteredCourses}" 
 			 sortBy="courseName" selection="#{courseBean.selectedCourses}" editable="true" scrollable="true" scrollHeight="300">
+				<p:ajax event="rowEdit" listener="#{courseBean.onCourseEdit}" update=":messages,courseTable" />
+				<p:ajax event="rowEditCancel" listener="#{courseBean.onCourseCancel}" update=":messages,courseTable" />
 				<f:facet name="header">
 					Course List  
 		            <p:outputPanel style="float:right">  
@@ -36,6 +38,21 @@
 		            <div style="clear:both;"></div>  
         		</f:facet>
 				<p:column selectionMode="multiple" style="width : 20px;"/> 
+				
+				<p:column id="courseCode" sortBy="courseCode" filterStyle="display:none" filterBy="courseCode">
+					<f:facet name="header">
+						<h:outputText value="Course Code" />
+					</f:facet>
+					<p:cellEditor>
+						<f:facet name="input">
+							<h:inputText value="#{course.courseCode}" />
+						</f:facet>
+						<f:facet name="output">
+							<h:outputText value="#{course.courseCode}" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				
 				<p:column id="courseName" sortBy="courseName" filterStyle="display:none" filterBy="courseName">
 					<f:facet name="header">
 						<h:outputText value="Course name" />
@@ -49,6 +66,7 @@
 						</f:facet>
 					</p:cellEditor>
 				</p:column>
+				
 				<p:column id="courseDescription" sortBy="courseDescription" filterStyle="display:none" filterBy="courseDescription">
 					<f:facet name="header">
 						<h:outputText value="Course Description" />

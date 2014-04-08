@@ -83,6 +83,7 @@ public class LoginBean implements Serializable{
 					break;
 					case 3 : destination = "/student";
 					break;
+					default : destination = "/admin";
 					
 					}
 				}
@@ -103,7 +104,7 @@ public class LoginBean implements Serializable{
 					
 					// keep user permissions in the session
 					PermissionDAO permissionDao = new PermissionDAO();
-					this.user.setPermissions(permissionDao.findRolePermission(user.getUserId()));
+					this.user.setPermissions(permissionDao.findRolePermission(user.getUserRoleId()));
 					
 					FacesUtil.setSessionAttribute(Constantes.CONNECTED_USER, this.user);
 					

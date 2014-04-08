@@ -160,7 +160,18 @@ public class TeacherBean {
 	
 	
 	public TeacherBean() {
-		// TODO Auto-generated constructor stub
+		
+		//First of all check if the user has access to this page.
+    	// Meaning if the user is connected.
+    	// TODO Should possibly check some other user right
+    	
+    	
+		User u = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
+		if(u==null)
+			FacesUtil.redirect("/",RessourceBundleUtil.getMessage("notConnected"));
+		
+    	//-------------------- end checking connection checkings--------------------------------
+		
 		this.newTeacher = new Teacher();
 		this.newUser = new User();
 		

@@ -65,7 +65,7 @@ public class RoleDAO extends DAO<Role> {
 	@Override
 	public Role find(int id) {
 		// TODO Auto-generated method stub
-		String req = "SELECT * FROM Roles where role_id = ?";
+		String req = "SELECT * FROM roles where role_id = ?";
 		
 		ResultSet res = null;
 		PreparedStatement st = null;

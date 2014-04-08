@@ -12,6 +12,7 @@ import org.gs.dao.RegistrationDAO;
 import org.gs.dao.StudentDAO;
 import org.gs.dao.UserDAO;
 import org.gs.layout.SchoolTreeBean;
+import org.gs.model.Program;
 import org.gs.model.Registration;
 import org.gs.model.SchoolPeriod;
 import org.gs.model.Structure;
@@ -21,6 +22,7 @@ import org.gs.util.CommonUtils;
 import org.gs.util.Constantes;
 import org.gs.util.FacesUtil;
 import org.gs.util.HashUtil;
+import org.gs.util.RessourceBundleUtil;
 
 
 @ManagedBean
@@ -65,6 +67,9 @@ public class RegistrationBean {
 					SchoolPeriod sp = this.schoolTreeBean.getSelectedSchoolPeriod();
 					if(sp!=null)
 						reg.setPeriodId(sp.getSchoolPeriodId());
+					Program program = this.schoolTreeBean.getSelectedProgram();
+					if(program!=null)
+						reg.setProgramId(program.getProgramId());
 					reg.setStudentId(studentId);
 					reg.setModifiedBy(connectedUser.getUserId());
 					reg.setCreatedBy(connectedUser.getUserId());
@@ -107,7 +112,9 @@ public class RegistrationBean {
 		RegistrationDAO rdao = new RegistrationDAO();
 		SchoolPeriod sp = this.schoolTreeBean.getSelectedSchoolPeriod();
 		Structure classe = this.schoolTreeBean.getSelectedNodeData();
-		registrations = rdao.classRegistrations(classe.getId(), sp.getSchoolPeriodId());
+		Program program = this.schoolTreeBean.getSelectedProgram();
+		
+		registrations = rdao.classRegistrations(classe.getId(), sp.getSchoolPeriodId(), program.getProgramId());
 		
 		return registrations;
 	}
@@ -119,7 +126,17 @@ public class RegistrationBean {
 	}
 	
 	public RegistrationBean() {
-		// TODO Auto-generated constructor stub
+		
+		//First of all check if the user has access to this page.
+    	// Meaning if the user is connected.
+    	// TODO Should possibly check some other user right
+    	
+    	
+		User u = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
+		if(u==null)
+			FacesUtil.redirect("/",RessourceBundleUtil.getMessage("notConnected"));
+		
+    	//-------------------- end checking connection checkings--------------------------------
 		
 		this.newStudent = new Student();
 		this.studentDao = new StudentDAO();

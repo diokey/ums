@@ -11,16 +11,32 @@ import javax.faces.event.ValueChangeEvent;
 
 import org.gs.dao.RegistrationDAO;
 import org.gs.layout.SchoolTreeBean;
+import org.gs.model.Program;
 import org.gs.model.Registration;
 import org.gs.model.SchoolPeriod;
 import org.gs.model.Structure;
+import org.gs.model.User;
+import org.gs.util.Constantes;
+import org.gs.util.FacesUtil;
+import org.gs.util.RessourceBundleUtil;
 
 @ManagedBean
 @ViewScoped
 public class StudentTranscriptBean {
 
 	public StudentTranscriptBean() {
-		// TODO Auto-generated constructor stub
+		
+		//First of all check if the user has access to this page.
+    	// Meaning if the user is connected.
+    	// TODO Should possibly check some other user right
+    	
+    	
+		User u = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
+		if(u==null)
+			FacesUtil.redirect("/",RessourceBundleUtil.getMessage("notConnected"));
+		
+    	//-------------------- end checking connection checkings--------------------------------
+		
 		this.registrationDao = new RegistrationDAO();
 		
 	}
@@ -55,8 +71,9 @@ public class StudentTranscriptBean {
 	private void init() {
 		Structure classe = this.schoolTreeBean.getSelectedNodeData();		
 		SchoolPeriod sp = this.schoolTreeBean.getSelectedSchoolPeriod();
+		Program program = this.schoolTreeBean.getSelectedProgram();
 		
-		registrations = registrationDao.classRegistrations(classe.getId(), sp.getSchoolPeriodId());
+		registrations = registrationDao.classRegistrations(classe.getId(), sp.getSchoolPeriodId(), program.getProgramId());
 		
 		if(this.selectedRegistration==null) {
 			if(this.registrations!=null && !this.registrations.isEmpty())

@@ -23,6 +23,7 @@ import org.gs.model.TeacherCourse;
 import org.gs.model.User;
 import org.gs.util.Constantes;
 import org.gs.util.FacesUtil;
+import org.gs.util.RessourceBundleUtil;
 
 @ManagedBean
 @ViewScoped
@@ -208,7 +209,19 @@ public class TeacherCourseBean {
 	}
 	
 	public TeacherCourseBean() {
-		// TODO Auto-generated constructor stub
+		
+		//First of all check if the user has access to this page.
+    	// Meaning if the user is connected.
+    	// TODO Should possibly check some other user right
+    	
+    	
+		User u = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
+		if(u==null)
+			FacesUtil.redirect("/",RessourceBundleUtil.getMessage("notConnected"));
+		
+    	//-------------------- end checking connection checkings--------------------------------
+		
+		
 		this.teacherDAO = new StaffDAO();
 		this.classCourseDao = new ClassCourseDAO();
 		this.structureDao = new StructureDAO();

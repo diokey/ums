@@ -1,0 +1,52 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="title">
+       	Add a new User
+   	</ui:define>
+	
+	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem label="Home" url="/"/>
+				<p:menuitem value="Users" />
+				<p:menuitem value="New user" />
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>
+	
+    <ui:define name="main">
+    	<p:panel styleClass="fix-parent-panel">
+	    	<h:form>
+	    		<h:panelGrid columns="2">
+	    			<p:outputLabel value="#{uiMessages.username}" for="username"/>
+	    			<p:inputText id="username" value="#{userBean.newUser.username}" />
+	    			<p:outputLabel value="#{uiMessages.displayName}" for="displayname"/>
+	    			<p:inputText id="displayname" value="#{userBean.newUser.displayName}" />
+	    			<p:outputLabel value="#{uiMessages.email}" for="email"/>
+	    			<p:inputText id="email" value="#{userBean.newUser.email}" />
+	    			<p:outputLabel value="#{uiMessages.password}" for="password"/>
+	    			<p:inputText id="password" value="#{userBean.newUser.userPassword}" />
+	    			<p:outputLabel value="#{uiMessages.role}" for="role"/>
+	    			<p:selectOneMenu id="role" value="#{userBean.newUser.userRoleId}">
+	    				<f:selectItems value="#{userBean.roles}" var="role" itemLabel="#{role.roleName}" itemValue="#{role.roleId}"/>
+	    			</p:selectOneMenu>
+	    			<p:outputLabel value="#{uiMessages.preferedLanguage}" for="language"/>
+	    			<p:selectOneMenu id="language" value="#{userBean.newUser.language}">
+	    				<f:selectItems value="#{userBean.appLanguages}"/>
+	    			</p:selectOneMenu>
+	    		</h:panelGrid>
+	    		<p:outputPanel styleClass="center-text">
+	    			<p:commandButton value="#{uiMessages.saveBtn}" action="#{userBean.saveNewUser}" update="@form, :messages"></p:commandButton>
+	    			<p:commandButton value="#{uiMessages.cancelBtn}" type="reset"></p:commandButton>
+	    		</p:outputPanel>
+	    	</h:form>
+    	</p:panel>
+    </ui:define>
+    
+</ui:composition>

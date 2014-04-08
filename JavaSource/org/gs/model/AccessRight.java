@@ -42,10 +42,8 @@ public class AccessRight{
 		if(userPermissions==null)
 			return false;
 		
-		System.out.println("Size : "+userPermissions.size());
-		
 		for(Permission p : userPermissions) {
-			System.out.println("Permission : "+p);
+			
 			if(permission.equalsIgnoreCase(p.getName()) && "active".equalsIgnoreCase(p.getStatus())) {
 				
 				return true;

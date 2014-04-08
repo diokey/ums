@@ -24,16 +24,17 @@ public class CourseDAO extends DAO<Course>{
 	@Override
 	public boolean create(Course object) {
 		// TODO Auto-generated method stub
-		String req = "insert into course (course_name,course_description,school_id,created_by,created_on) "
-				+ "values (?,?,?,?,NOW()) ";
+		String req = "insert into course (course_code,course_name,course_description,school_id,created_by,created_on) "
+				+ "values (?,?,?,?,?,NOW()) ";
 		PreparedStatement pst = null;
 		boolean res = false;
 		try {
 			pst = this.con.prepareStatement(req);
-			pst.setString(1, object.getCourseName());
-			pst.setString(2, object.getCourseDescription());
-			pst.setInt(3, object.getSchoolId());
-			pst.setInt(4, object.getCreatedBy());
+			pst.setString(1, object.getCourseCode());
+			pst.setString(2, object.getCourseName());
+			pst.setString(3, object.getCourseDescription());
+			pst.setInt(4, object.getSchoolId());
+			pst.setInt(5, object.getCreatedBy());
 			
 			res = pst.executeUpdate()>0;
 			
@@ -54,8 +55,31 @@ public class CourseDAO extends DAO<Course>{
 
 	@Override
 	public boolean update(Course object) {
-		// TODO Auto-generated method stub
-		return false;
+		String req = "UPDATE course SET course_code=?, course_name=?, course_description=? WHERE course_id = ?";
+		PreparedStatement pst = null;
+		boolean res = false;
+		try {
+			pst = this.con.prepareStatement(req);
+			pst.setString(1, object.getCourseCode());
+			pst.setString(2, object.getCourseName());
+			pst.setString(3, object.getCourseDescription());
+			pst.setInt(4, object.getCourseId());
+			
+			res = pst.executeUpdate()>0;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return res;
 	}
 
 	@Override
@@ -82,6 +106,7 @@ public class CourseDAO extends DAO<Course>{
 			if(res.next()) {
 				c = new Course();
 				c.setCourseId(res.getInt("course_id"));
+				c.setCourseCode(res.getString("course_code"));
 				c.setCourseName(res.getString("course_name"));
 				c.setCourseDescription(res.getString("course_description"));
 				c.setCreatedBy(res.getInt("created_by"));
@@ -119,6 +144,7 @@ public class CourseDAO extends DAO<Course>{
 			while(res.next()) {
 				Course c = new Course();
 				c.setCourseId(res.getInt("course_id"));
+				c.setCourseCode(res.getString("course_code"));
 				c.setCourseName(res.getString("course_name"));
 				c.setCourseDescription(res.getString("course_description"));
 				c.setCreatedBy(res.getInt("created_by"));

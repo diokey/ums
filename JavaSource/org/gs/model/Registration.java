@@ -100,6 +100,14 @@ public class Registration {
 		this.createdBy = createdBy;
 	}
 
+	public int getProgramId() {
+		return programId;
+	}
+
+	public void setProgramId(int programId) {
+		this.programId = programId;
+	}
+
 
 
 
@@ -107,6 +115,7 @@ public class Registration {
 	private int registrationId;
 	private int classId;
 	private int periodId;
+	private int programId;
 	private SchoolPeriod period;
 	private int studentId;
 	private Student student;
