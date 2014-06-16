@@ -198,7 +198,7 @@ public class StructureDAO extends DAO<Structure>{
 		return s;
 	}
 	
-	public List<Structure> getChildren(int parent_id) {
+	public List<Structure> getChildren(int parent_id,final List<Integer> access) {
 		
 		String req = "SELECT school_structure_details_id FROM school_structure_details where parent_id=?";
 		List<Structure> rootNodes = new ArrayList<Structure>();
@@ -212,11 +212,13 @@ public class StructureDAO extends DAO<Structure>{
 			statement.setInt(1,parent_id);
 			res = statement.executeQuery();
 			
-			while(res.next()) {				
-				s = this.find(res.getInt("school_structure_details_id"));
+			while(res.next()) {
 				
-				s.setChildren(this.getChildren(s.getId()));
-				rootNodes.add(s);
+				s = this.find(res.getInt("school_structure_details_id"));
+				if(access.contains(s.getId())) {
+					s.setChildren(this.getChildren(s.getId(),access));
+					rootNodes.add(s);
+				}
 			}
 			statement.close();
 		}catch(SQLException e) {
@@ -289,7 +291,7 @@ public class StructureDAO extends DAO<Structure>{
 		return classes;
 	}
 	
-	public List<Structure> getRoots(int school_structure_id) {
+	public List<Structure> getRoots(int school_structure_id, List<Integer> access) {
 		
 		String req = "SELECT school_structure_details_id FROM school_structure_details where school_structure_id=? and is_root=1";
 		List<Structure> rootNodes = new ArrayList<Structure>();
@@ -304,8 +306,10 @@ public class StructureDAO extends DAO<Structure>{
 			
 			while(res.next()) {				
 				s = this.find(res.getInt("school_structure_details_id"));
-				s.setChildren(this.getChildren(s.getId()));
-				rootNodes.add(s);
+				if(access.contains(s.getId())) {
+					s.setChildren(this.getChildren(s.getId(),access));
+					rootNodes.add(s);
+				}
 			}
 			statement.close();
 		}catch(SQLException e) {

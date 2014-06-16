@@ -271,5 +271,11 @@ public class UserDAO extends DAO<User>{
 		
 		return users;
 	}
+
+	public List<User> getUsersByRole(int roleId) {
+		// TODO Auto-generated method stub
+		String sql = "SELECT * FROM ";
+		return null;
+	}
 	
 }

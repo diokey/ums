@@ -1,9 +1,14 @@
 package org.gs.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class SchoolPeriod {
+public class SchoolPeriod implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public SchoolPeriod() {
 		// TODO Auto-generated constructor stub
 	}

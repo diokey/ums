@@ -70,6 +70,7 @@
              <p:submenu label="Users" icon="ui-icon-help" rendered="#{renderBean.hasAccess('Users.Menu.Access')}">
              	 <p:menuitem value="Users list" url="/admin/users.xhtml" rendered="#{renderBean.hasAccess('Users.user.View')}" />         
                  <p:menuitem value="Add users" url="/admin/addUsers.xhtml" rendered="#{renderBean.hasAccess('Users.user.Add')}" />                 
+                 <p:menuitem value="Class Access" url="/admin/classAccess.xhtml" rendered="#{renderBean.hasAccess('Users.Class.Permissions')}" />                 
                  <p:menuitem value="Permissions" rendered="#{renderBean.hasAccess('Users.Permission.View')}" url="/admin/permissions.xhtml" />
                  
              </p:submenu>

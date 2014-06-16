@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 
+import org.gs.dao.ClassAccessDAO;
 import org.gs.dao.ProgramDAO;
 import org.gs.dao.SchoolDAO;
 import org.gs.dao.StructureDAO;
@@ -20,7 +21,9 @@ import org.gs.model.School;
 import org.gs.model.SchoolPeriod;
 import org.gs.model.SchoolYear;
 import org.gs.model.Structure;
+import org.gs.model.User;
 import org.gs.util.Constantes;
+import org.gs.util.FacesUtil;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -280,16 +283,25 @@ public class SchoolTreeBean implements Serializable{
 	
 	@PostConstruct
 	public void buildTree() {
-				
+		
+		User connectedUser = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
+		
+		ClassAccessDAO caDao = new ClassAccessDAO();
+		
+		this.userClassAccess = caDao.getUserClassAccess(connectedUser.getUserId());
+		
+		//don't continue if the user doesn't have right to access any class
+		if(this.userClassAccess==null || this.userClassAccess.isEmpty())
+			return;
+		
 		root = null;
 		root = new DefaultTreeNode("root",null);
 		StructureDAO sdao = new StructureDAO();
-		List<Structure> nodes = sdao.getRoots(Constantes.CURRENT_SCHOOL);
+		List<Structure> nodes = sdao.getRoots(Constantes.CURRENT_SCHOOL, this.userClassAccess);
 		
 		for(Structure node : nodes) {
 			addNode(node,(DefaultTreeNode)root);
 		}
-		
 		
 		this.selectedNode  = this.selectFirstNode(root);
 		if(this.selectedNode!=null) {
@@ -523,6 +535,16 @@ public class SchoolTreeBean implements Serializable{
 	public void setSelectedProgram(Program selectedProgram) {
 		this.selectedProgram = selectedProgram;
 	}
+	
+	public List<Integer> getUserClassAccess() {
+		return userClassAccess;
+	}
+
+	public void setUserClassAccess(List<Integer> userClassAccess) {
+		this.userClassAccess = userClassAccess;
+	}
+
+
 
 	private TreeNode root ;
 	private TreeNode selectedNode;
@@ -534,6 +556,7 @@ public class SchoolTreeBean implements Serializable{
 	private List<SchoolYear> schoolYears;
 	private List<SchoolPeriod> schoolPeriods;
 	private List<Program> schoolPrograms;
+	private List<Integer> userClassAccess;
  	private School selectedSchool;
 	private SchoolYear selectedSchoolYear;
 	private SchoolPeriod selectedSchoolPeriod;
