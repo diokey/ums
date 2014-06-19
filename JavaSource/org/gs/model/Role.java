@@ -6,6 +6,16 @@ public class Role {
 		
 	}
 	
+	public Role(Role copy) {
+		this.roleId = copy.roleId;
+		this.roleName = copy.roleName;
+		this.roleDescription = copy.roleDescription;
+		this.buildIn = copy.buildIn;
+		this.canDelete = copy.canDelete;
+		this.deleted = copy.deleted;
+		this.loginDestination = copy.loginDestination;
+	}
+	
 	public int getRoleId() {
 		return roleId;
 	}

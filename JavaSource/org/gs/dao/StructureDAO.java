@@ -198,6 +198,45 @@ public class StructureDAO extends DAO<Structure>{
 		return s;
 	}
 	
+	public List<Structure> getChildrenFull(int parent_id) {
+		
+		String req = "SELECT school_structure_details_id FROM school_structure_details where parent_id=?";
+		List<Structure> rootNodes = new ArrayList<Structure>();
+		
+		ResultSet res = null;
+		Structure s = null;
+		
+		try {
+			PreparedStatement statement = this.con.prepareStatement(req);
+			
+			statement.setInt(1,parent_id);
+			res = statement.executeQuery();
+			
+			while(res.next()) {
+				
+				s = this.find(res.getInt("school_structure_details_id"));
+				
+				s.setChildren(this.getChildrenFull(s.getId()));
+				rootNodes.add(s);
+				
+			}
+			statement.close();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			
+			try {
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return rootNodes;
+	}
+	
 	public List<Structure> getChildren(int parent_id,final List<Integer> access) {
 		
 		String req = "SELECT school_structure_details_id FROM school_structure_details where parent_id=?";
@@ -290,7 +329,44 @@ public class StructureDAO extends DAO<Structure>{
 		
 		return classes;
 	}
-	
+
+	public List<Structure> getFullRoots(int school_structure_id) {
+		
+		String req = "SELECT school_structure_details_id FROM school_structure_details where school_structure_id=? and is_root=1";
+		List<Structure> rootNodes = new ArrayList<Structure>();
+		
+		ResultSet res = null;
+		Structure s = null;
+		try {
+			PreparedStatement statement = this.con.prepareStatement(req);
+			
+			statement.setInt(1, school_structure_id);
+			res = statement.executeQuery();
+			
+			while(res.next()) {				
+				s = this.find(res.getInt("school_structure_details_id"));
+				
+				s.setChildren(this.getChildrenFull(s.getId()));
+				rootNodes.add(s);
+				
+			}
+			statement.close();
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			
+			try {
+				res.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return rootNodes;
+	}
+
 	public List<Structure> getRoots(int school_structure_id, List<Integer> access) {
 		
 		String req = "SELECT school_structure_details_id FROM school_structure_details where school_structure_id=? and is_root=1";

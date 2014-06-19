@@ -1,7 +1,10 @@
 package org.gs.layout;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -27,6 +30,7 @@ import org.gs.util.FacesUtil;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.primefaces.util.ArrayUtils;
 
 @ManagedBean
 @SessionScoped
@@ -139,6 +143,7 @@ public class SchoolTreeBean implements Serializable{
 		
 		System.out.println("Selected Strucutre : "+this.selectedNodeData.getTitle());
 	}
+	
 	
 	public void deleteAll(Structure s,StructureDAO sDao) {
 		if(s==null)
@@ -281,6 +286,38 @@ public class SchoolTreeBean implements Serializable{
         } 
 	}
 	
+	public Object[] userAccessTree(int userId) {
+		
+		ClassAccessDAO classAccessDao = new ClassAccessDAO();
+		
+		List<Integer> selectedClasses = classAccessDao.getUserClassAccess(userId);
+		Set<Integer> selectedClassNodes = new LinkedHashSet<Integer>();
+		TreeNode userTree = null;
+		userTree = new DefaultTreeNode("root",null);
+		StructureDAO sdao = new StructureDAO();
+		List<Structure> nodes = sdao.getFullRoots(Constantes.CURRENT_SCHOOL);
+		
+		for(Structure node : nodes) {
+			addFullNode(node,(DefaultTreeNode)userTree,selectedClasses,selectedClassNodes);
+		}
+		Object result[] = new Object[2];
+		result[0] = userTree;
+		result[1] = selectedClassNodes;
+		return result;
+	}
+	
+	/*public void buildFullTree(List<Integer> selected) {
+		TreeNode userTree = null;
+		userTree = new DefaultTreeNode("root",null);
+		StructureDAO sdao = new StructureDAO();
+		List<Structure> nodes = sdao.getFullRoots(Constantes.CURRENT_SCHOOL);
+		
+		for(Structure node : nodes) {
+			addFullNode(node,(DefaultTreeNode)userTree,selected);
+		}
+		
+	}*/
+	
 	@PostConstruct
 	public void buildTree() {
 		
@@ -318,6 +355,28 @@ public class SchoolTreeBean implements Serializable{
 			return node;
 		}else{
 			return selectFirstNode(node.getChildren().get(0));
+		}
+	}
+	
+	private void addFullNode(Structure node_data, TreeNode root, 
+			final List<Integer> selected, Set<Integer> classNodes) {
+		if(node_data==null)
+			return;
+		DefaultTreeNode node = new DefaultTreeNode(node_data.isLeaf()?"leaf":"parent",node_data, root);
+		node.setExpanded(false);
+		if(selected.contains(node_data.getId())) {
+			classNodes.add(node_data.getId());
+		}
+		
+		if(!node_data.isLeaf()) {
+			List<Structure> children = node_data.getChildren();
+			for(Structure s : children) {				
+				addFullNode(s,node,selected,classNodes);
+			}
+		}else{
+			if(selected.contains(node_data.getId())) {
+				node.setSelected(true);
+			}
 		}
 	}
 	
@@ -425,8 +484,15 @@ public class SchoolTreeBean implements Serializable{
 	public void setRoot(TreeNode root) {
 		this.root = root;
 	}
-	
-	
+		
+	public TreeNode getRootFull() {
+		return rootFull;
+	}
+
+	public void setRootFull(TreeNode rootFull) {
+		this.rootFull = rootFull;
+	}
+
 	public TreeNode getSelectedNode() {
 		return selectedNode;
 	}
@@ -543,11 +609,21 @@ public class SchoolTreeBean implements Serializable{
 	public void setUserClassAccess(List<Integer> userClassAccess) {
 		this.userClassAccess = userClassAccess;
 	}
+	
+	public List<TreeNode> getSelectedNodes() {
+		return selectedNodes;
+	}
+
+	public void setSelectedNodes(List<TreeNode> selectedNodes) {
+		this.selectedNodes = selectedNodes;
+	}
 
 
 
 	private TreeNode root ;
+	private TreeNode rootFull ;
 	private TreeNode selectedNode;
+	private List<TreeNode> selectedNodes;
 	private List<MyTreeNodeModel> nodeTypes;
 	private String selectedTreeNodeString;
 	private Structure selectedNodeData;

@@ -22,14 +22,50 @@
 	
     <ui:define name="main">
     	<p:panel styleClass="fix-parent-panel">
-	    	<h:form>
-	    		<p:tabView value="#{classAccessBean.roles}" var="role" dynamic="true" cache="true" scrollable="true">						
+	    	
+	    		<p:tabView value="#{classAccessBean.roleAccessList}" var="role" scrollable="true">						
     				<p:tab title="#{role.roleName}">
-    					<p:dataTable value="#{classAccessBean.users(role.roleId)}" var="user">
+    					
+    					<p:dataTable id="usersList" value="#{role.userAccess}" var="uAccess" rowKey="index"
+    					paginator="true" rows="10" paginatorAlwaysVisible="false" sortMode="single">
+				    		<p:ajax event="rowToggle" listener="#{classAccessBean.onRowExpansion(role.roleId,index)}" /> 
+				    		<f:facet name="header">#{uiMessages.usersList}</f:facet>
+				    		<p:column style="width:16px">
+            					<p:rowToggler />
+        					</p:column>
+				    		<p:column headerText="Username">#{uAccess.user.username}</p:column>
+				    		<p:column headerText="Display Name">#{uAccess.user.displayName}</p:column>
+				    		<p:column headerText="Email">#{uAccess.user.email}</p:column>
+				    		<p:column headerText="Language">#{uAccess.user.language}</p:column>
+				    		<p:column headerText="Status"><h:outputText value="#{uAccess.user.banned?'Banned':'Active'}" /></p:column>
+				    		<p:column headerText="Last login">#{uAccess.user.lastLogin}</p:column>
+    						<p:rowExpansion>
+    							<p:panel>
+	    							<f:facet name="header">
+	    								Select Classes which <strong>#{role.roleName} "#{uAccess.user.username}" </strong> will access
+	    							</f:facet>
+	    							<p:tree id="class_access_tree" value="#{uAccess.tree}" var="node"
+	          							animate="true" selectionMode="checkbox" style="width:100%">
+	          		          	        <p:ajax event="select" process="@parent" listener="#{classAccessBean.nodeSelected}"></p:ajax>
+	          		          	        <p:ajax event="unselect" process="@parent" listener="#{classAccessBean.nodeUnSelected}"></p:ajax>  	
+						       			<p:treeNode type="parent" expandedIcon="ui-icon ui-icon-folder-open" 
+						       			collapsedIcon="ui-icon ui-icon-folder-collapsed">  
+											<h:outputText value="#{node.title}" />  
+										</p:treeNode>
+										<p:treeNode type="leaf" icon="ui-icon ui-icon-document">  
+											<h:outputText value="#{node.title}" />  
+										</p:treeNode>	                   	                  	 
+	
+	          						</p:tree>
+	          						<p:panel>
+	          							<p:commandButton value="Save" action="#{classAccessBean.saveAccess(role.roleId,index)}"></p:commandButton>
+	          						</p:panel>
+          						</p:panel>
+    						</p:rowExpansion>
     					</p:dataTable>
     				</p:tab>
     			</p:tabView>
-	    	</h:form>
+	    	
     	</p:panel>
     </ui:define>
     

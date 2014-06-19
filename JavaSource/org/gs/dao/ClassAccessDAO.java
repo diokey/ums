@@ -52,10 +52,69 @@ public class ClassAccessDAO extends DAO<ClassAccess> {
 		return userClassAccess;
 	}
 	
+	public boolean deleteUserAccess(int userId) {
+		// TODO Auto-generated method stub
+				String sql = "DELETE FROM class_access WHERE user_id = ?";
+				
+				PreparedStatement pst = null;
+				boolean result = false;
+				
+				try {
+					pst = this.con.prepareStatement(sql);
+					pst.setInt(1, userId);
+					
+					result = pst.execute();
+						
+					
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					try {
+						pst.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+				}
+				
+				return result;
+	}
+	
 	@Override
 	public boolean create(ClassAccess object) {
 		// TODO Auto-generated method stub
-		return false;
+		String sql = "INSERT INTO class_access(school_structure_details_id,user_id)"
+				+ " VALUES (?,?)";
+		
+		PreparedStatement pst = null;
+		boolean result = false;
+		
+		try {
+			pst = this.con.prepareStatement(sql);
+			pst.setInt(1, object.getClassId());
+			pst.setInt(2, object.getUserId());
+			
+			result = pst.execute();
+				
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 
 	@Override

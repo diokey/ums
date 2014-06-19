@@ -274,8 +274,55 @@ public class UserDAO extends DAO<User>{
 
 	public List<User> getUsersByRole(int roleId) {
 		// TODO Auto-generated method stub
-		String sql = "SELECT * FROM ";
-		return null;
+		List<User> users = new ArrayList<User>(); 
+		String req = "SELECT * FROM users where role_id = ?";
+		
+		PreparedStatement pst = null;
+		ResultSet res = null;
+		try {
+			pst = this.con.prepareStatement(req);
+			pst.setInt(1, roleId);
+			
+			res = pst.executeQuery();
+			
+			while(res.next()) {
+				
+				User u = new User();
+				u.setUserId(res.getInt("id"));
+				u.setUserRoleId(res.getInt("role_id"));
+				u.setEmail(res.getString("email"));
+				u.setUsername(res.getString("username"));
+				u.setUserPassword(res.getString("password_hash"));
+				u.setResetHash(res.getString("reset_hash"));
+				u.setLastLogin(res.getString("last_login"));
+				u.setLastIp(res.getString("last_ip"));
+				u.setDeleted(res.getBoolean("deleted"));
+				u.setResetBy(res.getInt("reset_by"));
+				u.setBanned(res.getBoolean("banned"));
+				u.setBannedMessage(res.getString("ban_message"));
+				u.setDisplayName(res.getString("display_name"));
+				u.setLanguage(res.getString("language"));
+				u.setActive(res.getBoolean("active"));
+				u.setPasswordIterations(res.getInt("password_iterations"));
+				u.setForcePasswordReset(res.getBoolean("force_password_reset"));
+				u.setUserRole(new RoleDAO().find(u.getUserRoleId()));
+				
+				users.add(u);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return users;
 	}
 	
 }
