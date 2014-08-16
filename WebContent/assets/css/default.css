@@ -387,5 +387,17 @@ background-position: -66px -147px !important;
 	padding-left : 20px !important;
 }
 
+.custom-table table {
+	border-collapse: collapse;
+}
+
+.custom-table table tr {
+	border : 1px solid black;
+}
+
+.custom-table table td,.custom-table table th {
+	border : 1px solid black;
+}
+
 
 }

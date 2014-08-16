@@ -138,5 +138,68 @@ public class StudentDAO extends DAO<Student>{
 		
 		return allStudents;
 	}
+	
+	public List<Student> studentInClass(int classId, int periodId, int program_id) {
+
+		List<Student> result = new ArrayList<Student>();
+		
+		String req = "SELECT * FROM registration r LEFT JOIN student s ON r.student_id = s.student_id WHERE r.class_id=? and r.period_id =? and r.program_id = ?";
+		
+		ResultSet res = null;
+		PreparedStatement pst = null;
+		Student student = null;
+		
+		try {
+			pst = this.con.prepareStatement(req);
+			pst.setInt(1, classId);
+			pst.setInt(2, periodId);
+			pst.setInt(3, program_id);
+			
+			res = pst.executeQuery();
+			
+			if(res.next()) {
+				student = new Student();
+				
+				student.setStudentId(res.getInt("student_id"));
+				student.setPrefix(res.getString("prefix"));
+				student.setName(res.getString("first_name"));
+				student.setGender(res.getString("gender"));
+				student.setLastName(res.getString("last_name"));
+				student.setMiddleName(res.getString("middle_name"));
+				student.setBirthDate(res.getDate("birth_date"));
+				student.setCountry(res.getString("country"));
+				student.setCity(res.getString("city"));
+				student.setAdress(res.getString("address"));
+				student.setNationality(res.getString("nationality"));
+				student.setTel1(res.getString("tel1"));
+				student.setTel2(res.getString("tel2"));
+				student.setEmail(res.getString("email"));
+				student.setSkype(res.getString("skype"));
+				student.setBloodGroup(res.getString("blood_group"));
+				student.setMaritalStatus(res.getString("marital_status"));
+				student.setUserId(res.getInt("user_id"));
+				student.setCreatedOn(res.getDate("created_on"));
+				student.setDeleted(res.getBoolean("deleted"));
+				
+				result.add(student);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return result;
+	}
 
 }

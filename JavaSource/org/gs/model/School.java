@@ -1,9 +1,14 @@
 package org.gs.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class School {
+public class School implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public School() {
 		// TODO Auto-generated constructor stub
 	}

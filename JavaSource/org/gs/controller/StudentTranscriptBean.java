@@ -1,5 +1,6 @@
 package org.gs.controller;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,10 +12,13 @@ import javax.faces.event.ValueChangeEvent;
 
 import org.gs.dao.RegistrationDAO;
 import org.gs.layout.SchoolTreeBean;
+import org.gs.model.ClassCourse;
+import org.gs.model.Course;
 import org.gs.model.Program;
 import org.gs.model.Registration;
 import org.gs.model.SchoolPeriod;
 import org.gs.model.Structure;
+import org.gs.model.Transcript;
 import org.gs.model.User;
 import org.gs.util.Constantes;
 import org.gs.util.FacesUtil;
@@ -72,6 +76,7 @@ public class StudentTranscriptBean {
 		Structure classe = this.schoolTreeBean.getSelectedNodeData();		
 		SchoolPeriod sp = this.schoolTreeBean.getSelectedSchoolPeriod();
 		Program program = this.schoolTreeBean.getSelectedProgram();
+		this.cumulativeGrades = new ArrayList<Transcript>();
 		
 		registrations = registrationDao.classRegistrations(classe.getId(), sp.getSchoolPeriodId(), program.getProgramId());
 		
@@ -80,9 +85,53 @@ public class StudentTranscriptBean {
 				this.selectedRegistration = this.registrations.get(0);
 		}
 		
+		Transcript cumulativeTotals = new Transcript();
+		int hoursTaken = 0;
+		int grad = 0;
+		int graded = 0;
+		float gp = 0;
+		float gpa = 0;
+		
 		if(this.selectedRegistration!=null) {
 			this.studentRegistration = this.registrationDao.studentRegistration(this.selectedRegistration.getStudentId());
-		
+			for(Registration r : this.studentRegistration) {
+				Transcript temp = this.studentMark.computeTotal(r.getNotes());
+				hoursTaken+= temp.getHoursTaken();
+				grad+= temp.getGrad();
+				graded+= temp.getGraded();
+				gp+= temp.getGp();
+				
+				r.getNotes().add(temp);
+			}
+			
+			gpa = gp / grad;
+			DecimalFormat df = new DecimalFormat("###.##");
+			//totalGpa in String
+			String tmp = df.format(gpa);
+			//after convert it back to float.
+			gpa = Float.parseFloat(tmp);
+					
+			DecimalFormat dfa = new DecimalFormat("###.##");
+			//totalGpa in String
+			String temp = dfa.format(gp);
+			//after convert it back to float.
+			gp = Float.parseFloat(temp);
+			
+			Course c = new Course();
+			c.setCourseName("Cumulative Totals");
+			ClassCourse cc = new ClassCourse();
+			cc.setCourse(c);
+			cumulativeTotals.setClassCourse(cc);
+			
+			cumulativeTotals.setHoursTaken(hoursTaken);
+			cumulativeTotals.setGrad(grad);
+			cumulativeTotals.setGraded(graded);
+			cumulativeTotals.setGrade("");
+			cumulativeTotals.setGp(gp);
+			cumulativeTotals.setGpa(gpa);
+			
+			this.cumulativeGrades.add(cumulativeTotals);
+			
 		}else{
 			this.studentRegistration = new ArrayList<Registration>();
 		}
@@ -119,11 +168,25 @@ public class StudentTranscriptBean {
 	public void setSchoolTreeBean(SchoolTreeBean schoolTreeBean) {
 		this.schoolTreeBean = schoolTreeBean;
 	}
+	
+	public StudentMarkBean getStudentMark() {
+		return studentMark;
+	}
+
+	public void setStudentMark(StudentMarkBean studentMark) {
+		this.studentMark = studentMark;
+	}
+
+	public List<Transcript> getCumulativeGrades() {
+		return cumulativeGrades;
+	}
+
+	public void setCumulativeGrades(List<Transcript> cumulativeGrades) {
+		this.cumulativeGrades = cumulativeGrades;
+	}
 
 
-
-
-
+	
 	private RegistrationDAO registrationDao;
 	private List<Registration> studentRegistration;
 	
@@ -131,7 +194,11 @@ public class StudentTranscriptBean {
 	private Registration selectedRegistration;
 	
 	private List<Registration> registrations;
+	private List<Transcript> cumulativeGrades;
 	
 	@ManagedProperty(value="#{schoolTreeBean}")
 	private SchoolTreeBean schoolTreeBean;
+	
+	@ManagedProperty(value="#{studentMarkBean}")
+	private StudentMarkBean studentMark;
 }

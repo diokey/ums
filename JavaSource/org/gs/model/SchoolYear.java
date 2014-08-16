@@ -1,10 +1,15 @@
 package org.gs.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
 
-public class SchoolYear {
+public class SchoolYear implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public SchoolYear() {
 		// TODO Auto-generated constructor stub
 	}

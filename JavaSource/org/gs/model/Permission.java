@@ -1,9 +1,15 @@
 package org.gs.model;
 
+import java.io.Serializable;
+
 import org.gs.util.Constantes;
 
-public class Permission {
+public class Permission implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public Permission() {
 		// TODO Auto-generated constructor stub
 		

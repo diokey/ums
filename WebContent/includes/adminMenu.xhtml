@@ -60,6 +60,7 @@
              
              <p:submenu label="Transcript" icon="ui-icon-help" rendered="#{renderBean.hasAccess('Transcript.Menu.Access')}">
                  <p:menuitem value="Student transcript" rendered="#{renderBean.hasAccess('Transcript.StudentTranscript.View')}" url="/admin/studentTranscript.xhtml" />
+                 <p:menuitem value="Class Roster" rendered="#{renderBean.hasAccess('Student.ClassRoster.View')}" url="/admin/classRoster.xhtml" />
                  <p:menuitem value="Course transcript" rendered="#{renderBean.hasAccess('Transcript.CourseTranscript.View')}" url="#" />
                  <p:submenu label="Settings" icon="ui-icon-search" rendered="#{renderBean.hasAccess('Transcript.Settings.View')}">
                     <p:menuitem value="Report card Grades" rendered="#{renderBean.hasAccess('Transcript.Settings.ReportGrade.View')}" url="#" />

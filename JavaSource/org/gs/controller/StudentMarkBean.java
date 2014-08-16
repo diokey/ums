@@ -1,5 +1,6 @@
 package org.gs.controller;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class StudentMarkBean {
 		
 	}
 	
-	private Transcript computeTotal(List<Transcript> marks) {
+	Transcript computeTotal(List<Transcript> marks) {
 		float totalGp = 0;
 		float totalGpa = 0;
 		int totalHours = 0;
@@ -63,10 +64,15 @@ public class StudentMarkBean {
 		}
 		
 		totalGpa+= totalGp/totalGrad;
+		DecimalFormat df = new DecimalFormat("###.##");
+		//totalGpa in String
+		String value = df.format(totalGpa);
+		//after convert it back to float.
+		totalGpa = Float.parseFloat(value);
 		
 		Transcript total = new Transcript();
 		Course c = new Course();
-		c.setCourseName("Totals ");
+		c.setCourseName("Totals for Quarter");
 		ClassCourse cc = new ClassCourse();
 		cc.setCourse(c);
 		User u = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
@@ -74,6 +80,11 @@ public class StudentMarkBean {
 		total.setHoursTaken(totalHours);
 		total.setGrad(totalGrad);
 		total.setGraded(totalGraded);
+		DecimalFormat dfa = new DecimalFormat("###.##");
+		//totalGpa in String
+		String temp = dfa.format(totalGp);
+		//after convert it back to float.
+		totalGp = Float.parseFloat(temp);
 		total.setGp(totalGp);
 		total.setGpa(totalGpa);
 		total.setRegistrationId(this.selectedRegistration.getRegistrationId());

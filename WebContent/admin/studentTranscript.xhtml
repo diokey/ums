@@ -78,6 +78,38 @@
 		    			</p:dataTable>
 	    			</p:fieldset>
     			</ui:repeat>
+    			<p:dataTable id="cumulativeNotes" value="#{studentTranscriptBean.cumulativeGrades}" var="studentsGrade" styleClass="fix-parent-panel" 
+		    		 		>		    				
+			    			<p:column>
+			    				<f:facet name="header"></f:facet>
+			    				#{studentsGrade.classCourse.course.courseName}
+			    			</p:column>
+		    			
+			    			<p:column>
+			    				<f:facet name="header">Hours</f:facet>
+			    				#{studentsGrade.hoursTaken}
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">Grad</f:facet>
+			    				#{studentsGrade.grad}
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">Graded</f:facet>
+			    				#{studentsGrade.graded}		
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">Grade</f:facet>
+			    				#{studentsGrade.grade} 				
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">GP</f:facet>
+			    				#{studentsGrade.gp}			
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">GPA</f:facet>
+			    				#{studentsGrade.gpa}		
+			    			</p:column>
+		    			</p:dataTable>
     		</p:outputPanel>
 	   		<p:outputPanel styleClass="center-text">
 	   			<p:commandButton value="Print" onclick="PF('transcriptdlg').show();" update=":transcript"></p:commandButton>
@@ -156,6 +188,38 @@
 	    			<br />
 	    			
     			</ui:repeat>
+    			<h:dataTable id="cumulativeNotes" value="#{studentTranscriptBean.cumulativeGrades}" var="studentsGrade" styleClass="fix-parent-panel" 
+		    		 		>		    				
+			    			<p:column>
+			    				<f:facet name="header"></f:facet>
+			    				#{studentsGrade.classCourse.course.courseName}
+			    			</p:column>
+		    			
+			    			<p:column>
+			    				<f:facet name="header">Hours</f:facet>
+			    				#{studentsGrade.hoursTaken}
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">Grad</f:facet>
+			    				#{studentsGrade.grad}
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">Graded</f:facet>
+			    				#{studentsGrade.graded}		
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">Grade</f:facet>
+			    				#{studentsGrade.grade} 				
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">GP</f:facet>
+			    				#{studentsGrade.gp}			
+			    			</p:column>
+			    			<p:column>
+			    				<f:facet name="header">GPA</f:facet>
+			    				#{studentsGrade.gpa}		
+			    			</p:column>
+		    			</h:dataTable>
     		</p:outputPanel>
    			</div>    			
 	  		</p:outputPanel>

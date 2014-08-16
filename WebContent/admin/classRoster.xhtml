@@ -1,0 +1,294 @@
+<ui:composition template="/templates/admintemplate.xhtml"
+	  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="title">
+       	Class Roster
+   	</ui:define>
+   	
+   	<ui:define name="jsFunction">
+		<h:form>
+			<p:remoteCommand name="treeNodeChanged" action="#{classRosterBean.onClassChanged}"
+			update=":studentTranscriptForm,:rosterPanel"></p:remoteCommand>
+		</h:form>
+	</ui:define>
+   	
+   	<ui:define name="breadcrumb">
+		<h:form>
+			<p:breadCrumb styleClass="fix-breadcrumb">
+				<p:menuitem value="#{uiMessages.home}" url="/"/>
+				<p:menuitem value="#{uiMessages.students}" url="/admin/students.xhtml"/>
+				<p:menuitem value="Class Roster"></p:menuitem>
+			</p:breadCrumb>
+		</h:form>	
+	</ui:define>
+	
+    <ui:define name="main">
+    	<h:form id="studentTranscriptForm">
+    		<p:panel styleClass="fix-parent-panel">
+    			<h:panelGrid columns="4">
+	    			<p:outputLabel value="Course" for="courses"/>
+	    			<p:selectOneMenu id="courses" valueChangeListener="#{classRosterBean.onCourseChanged}">
+	    				<f:selectItems value="#{classRosterBean.classCourses}" var="classCourse" 
+	    				itemLabel="#{classCourse.course.courseName}" itemValue="#{classCourse.classCourseId}" 
+	    				itemDescription="#{classCourse.courseDescription}"/>
+	    				<p:ajax event="change" update="credits,roster,:rosterPanel"></p:ajax>
+	    			</p:selectOneMenu>
+	    			<p:outputLabel value="Credit"></p:outputLabel>
+	    			<p:inputText id="credits" value="#{classRosterBean.selectedCourse.credits}" disabled="true"></p:inputText>
+	    		</h:panelGrid>
+    		</p:panel>
+    		<p:panel id="roster">
+    			<hr style="border:2px solid black"/>
+    			<h:panelGrid columns="2" style="width:100%">
+    				<h:panelGroup layout="block">
+    					<h2 style="margin-bottom:4px;margin-top:4px">Class Roster Grade Sheet </h2>
+    					13/06/14
+    				</h:panelGroup>
+    				<h:panelGroup layout="block" style="width:100%;">
+    					<h3 style="margin-bottom:4px;margin-top:4px">International Leadership University - Burundi</h3>
+    					6730b2/A Yaranda Boulevard, Rohero 1, PO Box 2330, Bujumbura
+    				</h:panelGroup>
+    			</h:panelGrid>
+    			<hr style="border:2px solid black"/>
+    			<h:panelGrid columns="4" style="width:100%">
+    				<h:panelGroup layout="block"> 
+    					Quarter : <br />
+    					#{schoolTreeBean.selectedSchoolPeriod.period} #{schoolTreeBean.selectedSchoolYear.schoolYearTitle} 
+    				</h:panelGroup>
+    				<h:panelGroup layout="block">
+    					<h:panelGrid columns="3">
+    						<h:outputText value="Class ID/"/>
+    						<h:outputText value="Credit/"/>
+    						<h:outputText value="Title"/>
+    						<h:outputText value="#{classRosterBean.selectedCourse.classCourseId}" />
+    						<h:outputText value="#{classRosterBean.selectedCourse.credits}" />
+    						<h:outputText value="#{classRosterBean.selectedCourse.course.courseName}" />
+    					</h:panelGrid>
+    				</h:panelGroup>
+    				<h:panelGroup layout="block"> 
+    					Lecturer : <br />
+    					#{classRosterBean.teacher.firstName} 
+    					#{classRosterBean.teacher.middleName}
+    					#{classRosterBean.teacher.lastName}  
+    				</h:panelGroup>
+    				<h:panelGroup layout="block">
+    					<p:selectBooleanCheckbox id="regular" label=""></p:selectBooleanCheckbox> 
+    					<label for="regular">Regular Class</label><br />
+    					<p:selectBooleanCheckbox id="extension" label="Extension Class"></p:selectBooleanCheckbox>
+    					<label for="extension">Extension Class</label>
+    				</h:panelGroup> 
+    			</h:panelGrid>
+    			<hr style="border:2px solid black"/>
+    			<div class="custom-table" style="margin-bottom:30px">
+    			<table class="custom-table">
+    				<thead>
+    					<tr style="border-left:none;border-top:none;border-bottom:none">
+    						<th style="border:none;width:70px"></th>
+    						<th style="width:150px; border:none"></th>
+    						<th style="width:400px" colspan="10">Continuous Assessment</th>
+    						<th style="width:70px">TOT CONT Ass %</th>
+    						<th style="width:70px">FINAL EXAM MARKS %</th>
+    						<th style="width:70px">TOT CONT ASS + FINAL EXAM MARKS</th>
+    						<th style="width:70px">FINAL GRADE</th>
+    						<th style="width:70px"></th>
+    					</tr>
+    				</thead>
+    				<tbody>
+    				<ui:repeat var="student" value="#{classRosterBean.students}">
+    					<tr style="border-left:none;border-top:none;border-bottom:none">
+    						<td style="border:none;width:70px">#{student.studentId}</td>
+    						<td style="border: none;">#{student.name} #{student.lastName}</td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    					</tr>
+    				</ui:repeat>
+    				</tbody>
+    			</table>
+    				<p>Total Students = #{classRosterBean.students.size()} </p>
+    			</div>
+    			<hr style="border:2px solid black"/>
+    			<h:panelGroup layout="block">
+    				Grades Due : 
+    				<h:panelGrid columns="2" style="width:100%">
+    					<h:panelGroup layout="block" style="width:100%">
+    					 <h:panelGrid columns="2">
+    					 	<h:outputText value="a) Graduates " />
+    					 	<h:outputText value=": __/__/__" />
+    					 	<h:outputText value="b) Continuing Students " />
+    					 	<h:outputText value=": __/__/__" />
+    					 </h:panelGrid>
+    					 	
+    					 <h:panelGrid columns="2">
+    					 	<h:outputText value="Signature " />
+    					 	<h:outputText value=": _______________________________" />
+    					 	<h:outputText value="Date" />
+    					 	<h:outputText value=": _______________________________" />
+    					 </h:panelGrid>
+    					</h:panelGroup>
+    					<h:panelGroup layout="block" style="width:100%">
+    						<h:panelGrid columns="2">
+    							<h:outputText value="H.O.D" />
+    							<h:outputText value=" : ______________________________________" />
+    							<h:outputText value="Signature" />
+    							<h:outputText value=" : ______________________________________" />
+    							<h:outputText value="Date " />
+    							<h:outputText value=": ______________________________________" />
+    							<h:outputText value="Comments" />
+    							<h:outputText value=": ______________________________________" />
+    						</h:panelGrid>
+    						
+    					</h:panelGroup>
+    				</h:panelGrid>
+    				<h:panelGroup layout="block" style="text-align:center">
+    					<p:commandButton value="Print Roster" update=":rosterPanel" oncomplete="PF('classRosterdlg').show();"></p:commandButton>
+    				</h:panelGroup>
+    			</h:panelGroup>
+    			
+		        
+		        
+    		</p:panel>
+    	</h:form>
+    	
+    	<p:dialog id="rosterDialog" widgetVar="classRosterdlg">
+        	<p:outputPanel layout="block" id="rosterPanel">
+        		<hr style="border:2px solid black"/>
+    			<h:panelGrid columns="2" style="width:100%">
+    				<h:panelGroup layout="block">
+    					<h2 style="margin-bottom:4px;margin-top:4px">Class Roster Grade Sheet </h2>
+    					13/06/14
+    				</h:panelGroup>
+    				<h:panelGroup layout="block" style="width:100%;">
+    					<h3 style="margin-bottom:4px;margin-top:4px">International Leadership University - Burundi</h3>
+    					6730b2/A Yaranda Boulevard, Rohero 1, PO Box 2330, Bujumbura
+    				</h:panelGroup>
+    			</h:panelGrid>
+    			<hr style="border:2px solid black"/>
+    			<h:panelGrid columns="4" style="width:100%">
+    				<h:panelGroup layout="block"> 
+    					Quarter : <br />
+    					#{schoolTreeBean.selectedSchoolPeriod.period} #{schoolTreeBean.selectedSchoolYear.schoolYearTitle} 
+    				</h:panelGroup>
+    				<h:panelGroup layout="block">
+    					<h:panelGrid columns="3">
+    						<h:outputText value="Class ID/"/>
+    						<h:outputText value="Credit/"/>
+    						<h:outputText value="Title"/>
+    						<h:outputText value="#{classRosterBean.selectedCourse.classCourseId}" />
+    						<h:outputText value="#{classRosterBean.selectedCourse.credits}" />
+    						<h:outputText value="#{classRosterBean.selectedCourse.course.courseName}" />
+    					</h:panelGrid>
+    				</h:panelGroup>
+    				<h:panelGroup layout="block"> 
+    					Lecturer : <br />
+    					#{classRosterBean.teacher.firstName} 
+    					#{classRosterBean.teacher.middleName}
+    					#{classRosterBean.teacher.lastName}  
+    				</h:panelGroup>
+    				<h:panelGroup layout="block">
+    					<p:selectBooleanCheckbox id="regular" label=""></p:selectBooleanCheckbox> 
+    					<label for="regular">Regular Class</label><br />
+    					<p:selectBooleanCheckbox id="extension" label="Extension Class"></p:selectBooleanCheckbox>
+    					<label for="extension">Extension Class</label>
+    				</h:panelGroup> 
+    			</h:panelGrid>
+    			<hr style="border:2px solid black"/>
+    			<div class="custom-table" style="margin-bottom:30px">
+    			<table class="custom-table">
+    				<thead>
+    					<tr style="border-left:none;border-top:none;border-bottom:none">
+    						<th style="border:none;width:70px"></th>
+    						<th style="width:150px; border:none"></th>
+    						<th style="width:400px" colspan="10">Continuous Assessment</th>
+    						<th style="width:70px">TOT CONT Ass %</th>
+    						<th style="width:70px">FINAL EXAM MARKS %</th>
+    						<th style="width:70px">TOT CONT ASS + FINAL EXAM MARKS</th>
+    						<th style="width:70px">FINAL GRADE</th>
+    						<th style="width:70px"></th>
+    					</tr>
+    				</thead>
+    				<tbody>
+    				<ui:repeat var="student" value="#{classRosterBean.students}">
+    					<tr style="border-left:none;border-top:none;border-bottom:none">
+    						<td style="border:none;width:70px">#{student.studentId}</td>
+    						<td style="border: none;">#{student.name} #{student.lastName}</td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    						<td></td>
+    					</tr>
+    				</ui:repeat>
+    				</tbody>
+    			</table>
+    				<p>Total Students = #{classRosterBean.students.size()} </p>
+    			</div>
+    			<hr style="border:2px solid black"/>
+    			<h:panelGroup layout="block">
+    				Grades Due : 
+    				<h:panelGrid columns="2" style="width:100%">
+    					<h:panelGroup layout="block" style="width:100%">
+    					 <h:panelGrid columns="2">
+    					 	<h:outputText value="a) Graduates " />
+    					 	<h:outputText value=": __/__/__" />
+    					 	<h:outputText value="b) Continuing Students " />
+    					 	<h:outputText value=": __/__/__" />
+    					 </h:panelGrid>
+    					 	
+    					 <h:panelGrid columns="2">
+    					 	<h:outputText value="Signature " />
+    					 	<h:outputText value=": _______________________________" />
+    					 	<h:outputText value="Date" />
+    					 	<h:outputText value=": _______________________________" />
+    					 </h:panelGrid>
+    					</h:panelGroup>
+    					<h:panelGroup layout="block" style="width:100%">
+    						<h:panelGrid columns="2">
+    							<h:outputText value="H.O.D" />
+    							<h:outputText value=" : ______________________________________" />
+    							<h:outputText value="Signature" />
+    							<h:outputText value=" : ______________________________________" />
+    							<h:outputText value="Date " />
+    							<h:outputText value=": ______________________________________" />
+    							<h:outputText value="Comments" />
+    							<h:outputText value=": ______________________________________" />
+    						</h:panelGrid>
+    						
+    					</h:panelGroup>
+    				</h:panelGrid>
+    			</h:panelGroup>
+    			<h:panelGroup style="text-align:center;">
+	    			<p:commandButton id="submitButton" value="Print">
+	        			<p:printer target="rosterPanel"></p:printer>
+	        		</p:commandButton> 
+        		</h:panelGroup>
+        	</p:outputPanel>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

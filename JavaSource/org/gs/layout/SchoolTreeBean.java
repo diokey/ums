@@ -27,6 +27,7 @@ import org.gs.model.Structure;
 import org.gs.model.User;
 import org.gs.util.Constantes;
 import org.gs.util.FacesUtil;
+import org.gs.util.RessourceBundleUtil;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -322,7 +323,10 @@ public class SchoolTreeBean implements Serializable{
 	public void buildTree() {
 		
 		User connectedUser = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
-		
+		if(connectedUser==null) {
+				FacesUtil.redirect("/",RessourceBundleUtil.getMessage("notConnected"));
+			return;
+		}
 		ClassAccessDAO caDao = new ClassAccessDAO();
 		
 		this.userClassAccess = caDao.getUserClassAccess(connectedUser.getUserId());
