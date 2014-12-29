@@ -73,21 +73,26 @@ public class ClassRosterBean implements Serializable {
 	 * Method that saves all grades filled in the classroster
 	 */
 	public void saveGrades() {
+		/**
+		 * For some reasons (that i don't know yet), the value stored in final exam grades never make it
+		 * to the server. I guess this is related to the process , update attribute and primefaces scope.
+		 * Right now i am using process="@this" and update="@form". Although i can the value changes in
+		 * this method, the new value somehow manages to disappear in the save method.
+		 * It's weird because when i change process="@form" and update="@this", the values are kept but 
+		 * with some extraneous value o.o even when the field was not filled. This is not the desired
+		 * behavior as the user may intentionally leave this field blank to mean that the grade are not 
+		 * attributed to the student yet.
+		 * 
+		 * The work around that i found for this was to use ArrayList. I'm shamefully putting value into an array 
+		 * (which doesn't make any sense) and retrieving those value into the variables and saving them. 
+		 */
+		
 		ClassRosterDAO classrosterDao = new ClassRosterDAO();
 		FacesMessage message = null;
 		String errorMsgText = RessourceBundleUtil.getMessage("errorSavingClassRoster");
 		String successMsgText = RessourceBundleUtil.getMessage("successSavingClassRoster");
 		String errorText = RessourceBundleUtil.getMessage("error");
 		String successText = RessourceBundleUtil.getMessage("success");
-		
-		/** 
-		 * I'm manually assigning/replacing notes from tempNotes.
-		 * See examMarksChanged method for motives of doing this.
-		 */
-		for (int k : this.tempNotes.keySet()) {
-			AssessmentGrade ag = this.tempNotes.get(k);
-			this.studentsAssementGrades.set(k, ag);
-		}
 		
 		for(AssessmentGrade assg : this.studentsAssementGrades) {
 			
@@ -130,40 +135,7 @@ public class ClassRosterBean implements Serializable {
 		
 		this.init();
 	}
-	
-	public void examMarksChanged(ValueChangeEvent e) {
-		/**
-		 * For some reasons (that i don't know yet), the value stored in final exam grades never make it
-		 * to the server. I guess this is related to the process , update attribute and primefaces scope.
-		 * Right now i am using process="@this" and update="@form". Although i can the value changes in
-		 * this method, the new value somehow manages to disappear in the save method.
-		 * It's weird because when i change process="@form" and update="@this", the values are kept but 
-		 * with some extraneous value o.o even when the field was not filled. This is not the desired
-		 * behavior as the user may intentionally leave this field blank to mean that the grade are not 
-		 * attributed to the student yet.
-		 * 
-		 * The following code is a work around for the above problem. I'm basically storing the changed values
-		 * in a map, and manually retrieve/replacing those value where they were supposed to be.
-		 * Check saveNote Method to see how it is used.
-		 */
-		if(e.getNewValue()==null)
-			return;
-		String newValueString = ""+e.getNewValue();
-		Float newValue;
-		if(newValueString.isEmpty()) {
-			newValue = null;
-		} else {
-			newValue = Float.parseFloat(newValueString);
-		}
-		int index = Integer.parseInt(""+e.getComponent().getAttributes().get("alt"));
 		
-		AssessmentGrade assg = this.studentsAssementGrades.get(index);
-		assg.setFinalExamMarks(newValue);
-		
-		this.tempNotes.put(index, assg);
-		
-	}
-	
 	public static void main(String args[]) {
 		System.out.println(Float.parseFloat("0"));
 	}
