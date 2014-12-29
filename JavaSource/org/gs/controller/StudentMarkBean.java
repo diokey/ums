@@ -63,11 +63,15 @@ public class StudentMarkBean {
 			totalGp+= t.getGp();
 		}
 		
-		totalGpa+= totalGp/totalGrad;
+		//avoid division by zero
+		if (totalGrad != 0) {
+			totalGpa+= totalGp/totalGrad;
+		}
 		DecimalFormat df = new DecimalFormat("###.##");
 		//totalGpa in String
 		String value = df.format(totalGpa);
 		//after convert it back to float.
+		
 		totalGpa = Float.parseFloat(value);
 		
 		Transcript total = new Transcript();

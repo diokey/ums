@@ -1,5 +1,7 @@
 package org.gs.controller;
 
+import java.io.Serializable;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -15,7 +17,14 @@ import org.primefaces.model.DefaultDashboardModel;
 
 @ManagedBean
 @ViewScoped
-public class DashBordBean {
+public class DashBordBean implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5692078750067679376L;
+
+
 
 	public DashBordBean() {
 		//First of all check if the user has access to this page.

@@ -47,7 +47,7 @@
              </p:submenu>
              
              <p:submenu label="Evaluations" icon="ui-icon-help" rendered="#{renderBean.hasAccess('Evaluation.Menu.Access')}">
-                 <p:menuitem value="Homework" url="#" rendered="#{renderBean.hasAccess('Evaluations.Homework.View')}" />
+                 <p:menuitem value="#{uiMessages.continousAssessment}" url="#" rendered="#{renderBean.hasAccess('Evaluations.continousAssessment.View')}" />
                  <p:menuitem value="#{uiMessages.examination}" rendered="#{renderBean.hasAccess('Evaluations.Examination.View')}" url="/admin/examination.xhtml" />                
              </p:submenu>
              

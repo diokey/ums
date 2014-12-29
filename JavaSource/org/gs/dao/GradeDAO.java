@@ -45,6 +45,53 @@ public class GradeDAO extends DAO<Grade>{
 		return null;
 	}
 	
+	public Grade findByNote(int schoolType, int note) {
+		Grade g = null;
+		ResultSet res = null;
+		PreparedStatement pst = null;
+		
+		String sql = "SELECT * FROM grade where school_type = ? and marks_max >= ? and marks_min <= ?";
+		
+		try {
+			pst = this.con.prepareStatement(sql);
+			pst.setInt(1, schoolType);
+			pst.setInt(2, note);
+			pst.setInt(3, note);
+			
+			res = pst.executeQuery();
+			
+			if(res.next()) {
+				g = new Grade();
+				
+				g.setGradeId(res.getInt("gradeId"));
+				g.setMinMarks(res.getFloat("marks_min"));
+				g.setMaxMarks(res.getFloat("marks_max"));
+				g.setGradePoint(res.getFloat("grade_point"));
+				g.setLevelAchievement(res.getString("level_achievement"));
+				g.setSchoolType(res.getInt("school_type"));
+				g.setDeleted(res.getBoolean("deleted"));
+				g.setLetterCode(res.getString("letter_code"));
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				res.close();
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return g;
+	}
+	
 	public List<Grade> findAll(int schoolType) {
 		List<Grade> grades = new ArrayList<Grade>();
 		Grade g = null;

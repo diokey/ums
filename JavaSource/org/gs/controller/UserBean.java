@@ -1,5 +1,6 @@
 package org.gs.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +21,12 @@ import org.gs.util.RessourceBundleUtil;
 
 @ManagedBean
 @ViewScoped
-public class UserBean {
+public class UserBean implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3416075641320563517L;
 	public void saveNewUser() {
 		
 		UserDAO udao = new UserDAO();

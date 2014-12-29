@@ -25,12 +25,18 @@ import org.gs.model.User;
 import org.gs.util.Constantes;
 import org.gs.util.FacesUtil;
 import org.gs.util.RessourceBundleUtil;
+import org.gs.util.SchoolType;
 
 @ManagedBean
 @ViewScoped
 public class ExaminationBean {
 
-
+	private static final int TEACHER_ROLE = 2;
+	/**
+	 * Method called when course changed. Should update the current page information
+	 * with the currently selected course
+	 * @param e
+	 */
 	public void onCourseChanged(ValueChangeEvent e) {
 		if(e==null || e.getNewValue()==null)
 			return;
@@ -43,13 +49,19 @@ public class ExaminationBean {
 		
 	}
 	
+	/**
+	 * Method called when course changed. Should update the current page information
+	 * with the currently selected course
+	 * @param e
+	 */
 	public void onClassChanged() {
-		System.out.println("Class changed...");
 		this.selectedCourse = null;
 		this.init();
 	}
 	
-	
+	/*
+	 * Saves notes in the database.
+	 */
 	public void saveNotes() {
 		String msg = "";
 		FacesMessage message = null;
@@ -123,8 +135,14 @@ public class ExaminationBean {
     	
     	
 		User u = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
-		if(u==null)
-			FacesUtil.redirect("/",RessourceBundleUtil.getMessage("notConnected"));
+		if(u==null) {
+			try {
+				FacesUtil.redirect("/",RessourceBundleUtil.getMessage("notConnected"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
 		
     	//-------------------- end checking connection checkings--------------------------------
 		
@@ -141,7 +159,9 @@ public class ExaminationBean {
 		SchoolPeriod sp = this.schoolTreeBean.getSelectedSchoolPeriod();
 		User user = (User) FacesUtil.getSessionAttribute(Constantes.CONNECTED_USER);
 		
-		if(user.getUserRoleId()==2) {
+		// if the connected user is a teacher, then fetch only courses that he teaches
+		//TODO Remove the hard corded integer.
+		if(user.getUserRoleId() == TEACHER_ROLE) {
 			
 			Staff teacher = new StaffDAO().findByUserId(user.getUserId());
 			
@@ -162,14 +182,14 @@ public class ExaminationBean {
 			this.students = new ArrayList<Transcript>();
 			
 		// TODO Should adapt this to be more flexible. Depends on which type of class
-		this.grades = this.gradeDao.findAll(1);
+		SchoolType schoolType = SchoolType.UNDERDRAGRUATE;
+		this.grades = this.gradeDao.findAll(schoolType.getSchoolType());
 		
 		if(this.students!=null && this.selectedCourse!=null) {
 			for(Transcript t : this.students) {
 				t.setHoursTaken(this.selectedCourse.getCredits());
 				t.setGrad(this.selectedCourse.getCredits());
-				t.setGraded(t.getGrad());			
-				
+				t.setGraded(t.getGrad());	
 			}
 		}
 		

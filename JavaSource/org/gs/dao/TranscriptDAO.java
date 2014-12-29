@@ -216,9 +216,11 @@ public class TranscriptDAO extends DAO<Transcript>{
 		} finally {
 			try {
 				
-				res2.close();
+				if(res2 != null)
+					res2.close();
 				res.close();
-				pst2.close();
+				if(pst2 != null)
+					pst2.close();
 				pst.close();
 				
 			} catch (SQLException e) {

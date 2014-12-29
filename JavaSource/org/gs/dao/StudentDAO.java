@@ -157,7 +157,7 @@ public class StudentDAO extends DAO<Student>{
 			
 			res = pst.executeQuery();
 			
-			if(res.next()) {
+			while(res.next()) {
 				student = new Student();
 				
 				student.setStudentId(res.getInt("student_id"));

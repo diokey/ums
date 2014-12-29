@@ -98,31 +98,38 @@
     					</tr>
     				</thead>
     				<tbody>
-    				<ui:repeat var="student" value="#{classRosterBean.students}">
+    				<ui:repeat var="studentAssessment" value="#{classRosterBean.studentsAssementGrades}" varStatus="mainIndex">
     					<tr style="border-left:none;border-top:none;border-bottom:none">
-    						<td style="border:none;width:70px">#{student.studentId}</td>
-    						<td style="border: none;">#{student.name} #{student.lastName}</td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
+    						<td style="border:none;width:70px">#{studentAssessment.registration.student.studentId}</td>
+    						<td style="border: none;">#{studentAssessment.registration.student.name} #{studentAssessment.registration.student.lastName}</td>
+    						
+    						<ui:repeat var="assessmentGrade" value="#{classRosterBean.studentsAssementGrades[mainIndex.index].assessmentGrades}" varStatus="innerIndex">
+    							<td>
+	    							<p:spinner size="2" converter="noteConverter" immediate="true" value="#{classRosterBean.studentsAssementGrades[mainIndex.index].assessmentGrades[innerIndex.index]}" max="20" min="">
+	    								<p:ajax process="@form" update="@this"></p:ajax>
+	    							</p:spinner>
+	    							<!-- <p:inputText size="2" value="#{studentAssessment.assessmentGrades[index.index]}" maxlength="2">
+	    								<p:ajax process="@form" update="@form"></p:ajax>
+	    							</p:inputText> -->
+    							</td>
+    						</ui:repeat>
+    						
+    						<ui:repeat var="otherGrades" value="#{classRosterBean.studentsAssementGrades[mainIndex.index].otherGrades}" varStatus="otherIndex">
+    							<td>
+	    							<p:spinner size="2" rendered="#{otherIndex.index==1}" converter="noteConverter" immediate="true" value="#{classRosterBean.studentsAssementGrades[mainIndex.index].otherGrades[otherIndex.index]}" max="100" min="">
+	    								<p:ajax process="@form" update="@this"></p:ajax>
+	    							</p:spinner>
+	    							<p:outputLabel rendered="#{otherIndex.index!=1}" value="#{classRosterBean.studentsAssementGrades[mainIndex.index].otherGrades[otherIndex.index]}"></p:outputLabel>
+	    							
+    							</td>
+    						</ui:repeat>
     					</tr>
     				</ui:repeat>
     				</tbody>
     			</table>
-    				<p>Total Students = #{classRosterBean.students.size()} </p>
+    				<p>Total Students = #{classRosterBean.studentsAssementGrades.size()} </p>
     			</div>
+    			
     			<hr style="border:2px solid black"/>
     			<h:panelGroup layout="block">
     				Grades Due : 
@@ -157,6 +164,7 @@
     					</h:panelGroup>
     				</h:panelGrid>
     				<h:panelGroup layout="block" style="text-align:center">
+    					<p:commandButton process="@form" value="Save" update="@form,:messages" action="#{classRosterBean.saveGrades}"></p:commandButton>
     					<p:commandButton value="Print Roster" update=":rosterPanel" oncomplete="PF('classRosterdlg').show();"></p:commandButton>
     				</h:panelGroup>
     			</h:panelGroup>
@@ -224,30 +232,23 @@
     					</tr>
     				</thead>
     				<tbody>
-    				<ui:repeat var="student" value="#{classRosterBean.students}">
+    				<ui:repeat var="studentAssessment" value="#{classRosterBean.studentsAssementGrades}">
     					<tr style="border-left:none;border-top:none;border-bottom:none">
-    						<td style="border:none;width:70px">#{student.studentId}</td>
-    						<td style="border: none;">#{student.name} #{student.lastName}</td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
-    						<td></td>
+    						<td style="border:none;width:70px">#{studentAssessment.registration.student.studentId}</td>
+    						<td style="border: none;">#{studentAssessment.registration.student.name} #{studentAssessment.registration.student.lastName}</td>
+    						<ui:repeat var="assessmentGrade" value="#{studentAssessment.assessmentGrades}">
+    							<td>#{assessmentGrade}</td>
+    						</ui:repeat>
+    						<td>#{studentAssessment.totalContiniousAssessement}</td>
+    						<td>#{studentAssessment.finalExamMarks}</td>
+    						<td>#{studentAssessment.totalAssessmentPlusExam}</td>
+    						<td>#{studentAssessment.finalGrade}</td>
     						<td></td>
     					</tr>
     				</ui:repeat>
     				</tbody>
     			</table>
-    				<p>Total Students = #{classRosterBean.students.size()} </p>
+    				<p>Total Students = #{classRosterBean.studentsAssementGrades.size()} </p>
     			</div>
     			<hr style="border:2px solid black"/>
     			<h:panelGroup layout="block">

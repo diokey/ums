@@ -103,8 +103,11 @@ public class StudentTranscriptBean {
 				
 				r.getNotes().add(temp);
 			}
+			//avoid division by zero
+			if ( grad != 0) {
+				gpa = gp / grad;
+			}
 			
-			gpa = gp / grad;
 			DecimalFormat df = new DecimalFormat("###.##");
 			//totalGpa in String
 			String tmp = df.format(gpa);
