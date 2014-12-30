@@ -35,6 +35,7 @@ import org.gs.model.User;
 import org.gs.util.Constantes;
 import org.gs.util.FacesUtil;
 import org.gs.util.RessourceBundleUtil;
+import org.gs.util.SchoolType;
 
 @ManagedBean
 @ViewScoped
@@ -97,16 +98,54 @@ public class ClassRosterBean implements Serializable {
 		for(AssessmentGrade assg : this.studentsAssementGrades) {
 			
 			assg.setClassCourse(this.selectedCourse);
-			//total continious assessment : index 0
-			assg.setTotalContiniousAssessement(assg.getOtherGrades().get(0)==null?null:(Float)assg.getOtherGrades().get(0));
-			// final exam : index 1
+			
+			List<Float> notes =assg.getAssessmentGrades();
+			
+			float sum = 0;
+			int count = 0;
+			for(Float f : notes) {
+				if (f != null) {
+					sum+=f;
+					count++;
+				}
+			}
+			
+			Float totalContiniousAssessment = null;
+			if (count != 0) {
+				totalContiniousAssessment = (sum * 100) / (count * 20);
+				assg.setTotalContiniousAssessement(totalContiniousAssessment);
+			} else {
+				assg.setTotalContiniousAssessement(assg.getOtherGrades().get(1)==null?null:(Float)assg.getOtherGrades().get(0));
+			}
+			
+			//final exam marks is at index 1
 			assg.setFinalExamMarks(assg.getOtherGrades().get(1)==null?null:(Float)assg.getOtherGrades().get(1));
-			//total assessment and exam index 2
-			assg.setTotalAssessmentPlusExam(assg.getOtherGrades().get(2)==null?null:(Float)assg.getOtherGrades().get(2));
-			//final grade : index 3
-			assg.setFinalGrade(assg.getOtherGrades().get(3)==null?null:(Float)assg.getOtherGrades().get(3));
-			//letter code :  index 4
-			assg.setLetterCode(assg.getOtherGrades().get(4)==null?null:""+assg.getOtherGrades().get(4));
+			
+			if(totalContiniousAssessment != null && assg.getFinalExamMarks() != null) {
+				float totalAssessmentPlusGrade = (assg.getFinalExamMarks() + totalContiniousAssessment) / 2;
+				assg.setTotalAssessmentPlusExam(totalAssessmentPlusGrade);
+			} else {
+				if (totalContiniousAssessment == null && assg.getFinalExamMarks() != null) {
+					assg.setTotalAssessmentPlusExam(assg.getFinalExamMarks());
+				} else {
+					assg.setTotalAssessmentPlusExam(assg.getOtherGrades().get(1)==null?null:(Float)assg.getOtherGrades().get(2));
+				}
+			}
+			
+			if(assg.getTotalAssessmentPlusExam() != null) {
+				GradeDAO gradeDao = new GradeDAO();
+				//TODO Make sure not to hard code this value.
+				SchoolType type = SchoolType.UNDERDRAGRUATE;
+				Grade g = gradeDao.findByNote(type.getSchoolType(), (int)(float)assg.getTotalAssessmentPlusExam());
+				assg.setFinalGrade(g.getGradePoint());
+				assg.setLetterCode(g.getLetterCode());
+			} else {
+				//final grade : index 3
+				assg.setFinalGrade(assg.getOtherGrades().get(3)==null?null:(Float)assg.getOtherGrades().get(3));
+				//letter code :  index 4
+				assg.setLetterCode(assg.getOtherGrades().get(4)==null?null:""+assg.getOtherGrades().get(4));
+			}
+			
 			
 			if(assg.isNew()) {				
 				if (!classrosterDao.create(assg)) {
@@ -124,6 +163,8 @@ public class ClassRosterBean implements Serializable {
 					return; //stop if an error occured
 				}
 			}
+			
+			saveTranscript(assg);
 		}
 		
 		this.tempNotes.clear();
@@ -133,9 +174,41 @@ public class ClassRosterBean implements Serializable {
 		
 		FacesUtil.addMessage(null, message);
 		
+		
+		
 		this.init();
 	}
+	
+	private void saveTranscript(AssessmentGrade ass) {
+		if(ass == null)
+			return;
+		Transcript transcript = new Transcript();
+		transcript.setRegistrationId(ass.getRegistration().getRegistrationId());
+		transcript.setClassCourseId(ass.getClassCourse().getClassCourseId());
+		transcript.setHoursTaken(ass.getClassCourse().getCredits());
+		transcript.setGrad(transcript.getHoursTaken());
+		transcript.setGraded(transcript.getGrad());
 		
+		String grade = ass.getLetterCode();
+		float gpa = ass.getFinalGrade() ==null?0:(Float) ass.getFinalGrade();
+		float gp = gpa * transcript.getGraded();
+		
+		transcript.setGp(gp);
+		transcript.setGpa(gpa);
+		transcript.setGrade(grade);
+		
+		TranscriptDAO transcriptDao = new TranscriptDAO();
+		
+		if(ass.isNew()) {
+			if(!transcriptDao.create(transcript)) {
+				System.out.println("ERROR : Unable to save student transcript");
+			}
+		} else {
+			if(!transcriptDao.update(transcript)) {
+				System.out.println("ERROR : Unable to update student transcript");
+			}
+		}
+	}
 	public static void main(String args[]) {
 		System.out.println(Float.parseFloat("0"));
 	}
