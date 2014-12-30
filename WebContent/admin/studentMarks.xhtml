@@ -34,7 +34,7 @@
 	    				<f:selectItems value="#{studentMarkBean.registrations}" var="registration" 
 	    				itemLabel="#{registration.student.name} #{registration.student.middleName} #{registration.student.lastName}"
 	    				itemValue="#{registration.registrationId}"/>
-	    				<p:ajax event="change" update="notes"></p:ajax>
+	    				<p:ajax event="change" update="notes,saveBtn"></p:ajax>
 	    			</p:selectOneMenu>
     			</h:panelGrid>
     			
@@ -55,35 +55,28 @@
     				#{studentsGrade.grad}
     			</p:column>
     			<p:column headerText="Graded">
-    				<p:inputText value="#{studentsGrade.graded}" size="5">
-    					<p:ajax event="change"></p:ajax>
-    				</p:inputText>    				
+    				<p:spinner disabled="#{studentMarkBean.transcriptGenerated}" size="5" value="#{studentsGrade.graded}" min="0" max="#{studentsGrade.grad}">
+    					<p:ajax event="change" process="@this" update="gp,gpa" listener="#{studentMarkBean.assignGrade(index)}">
+    					</p:ajax>
+    				</p:spinner>    				
     			</p:column>
     			<p:column headerText="Grade">    				
-    				<p:selectOneMenu value="#{studentsGrade.grade}" disabled="#{studentMarkBean.transcriptGenerated}">
-    					<f:selectItem itemLabel="" itemValue=""/>
-    					<f:selectItems value="#{studentMarkBean.grades}" var="grade" 
-    					itemLabel="#{grade.letterCode}" itemValue="#{grade.letterCode}"
-    					itemDescription="#{grade.levelAchievement}"/>
-    					<p:ajax event="change" process="@this" update="gp,gpa" listener="#{studentMarkBean.assignGrade(index)}">    						
-    					</p:ajax>
-    				</p:selectOneMenu>
+    				#{studentsGrade.grade}
     			</p:column>
     			<p:column headerText="GP">
-    				<p:inputText id="gp" value="#{studentsGrade.gp}" size="5" disabled="#{studentMarkBean.transcriptGenerated}">
-    					<p:ajax event="change"></p:ajax>
-    				</p:inputText>    				
+    				<p:outputLabel id="gp" value="#{studentsGrade.gp}">
+    				</p:outputLabel> 				
     			</p:column>
     			<p:column headerText="GPA">
-    				<p:inputText id="gpa" value="#{studentsGrade.gpa}" size="5" disabled="#{studentMarkBean.transcriptGenerated}">
-    					<p:ajax event="change"></p:ajax>
-    				</p:inputText>    				
+    				<p:outputLabel id="gpa" value="#{studentsGrade.gpa}">
+    				</p:outputLabel>  				
     			</p:column>
     		</p:dataTable>
     		<p:outputPanel layout="block" styleClass="center-text">
-    			<p:commandButton value="Save" action="#{studentMarkBean.saveNotes}" immediate="true" update=":messages"></p:commandButton>
-    			<p:commandButton value="Transcript" action="#{studentMarkBean.generateTranscript}" update=":studentMarkForm:notes,:transcript" oncomplete="PF('transcriptdlg').show();"></p:commandButton>
+    			<p:commandButton id="saveBtn" disabled="#{studentMarkBean.transcriptGenerated}" value="Save" action="#{studentMarkBean.saveNotes}" immediate="true" update=":messages"></p:commandButton>
+    			<p:commandButton value="Generate Transcript" action="#{studentMarkBean.generateTranscript}" update=":studentMarkForm:notes,:transcript,saveBtn" oncomplete="PF('transcriptdlg').show();"></p:commandButton>
     		</p:outputPanel>
+    		<p><span class="ui-icon ui-icon-alert" style="float:left"></span>* Note : Once the transcript has been generated, it can no longer be edited.</p>
     	</h:form>
     	
     	

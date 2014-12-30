@@ -30,8 +30,8 @@ public class ClassRosterDAO extends DAO<AssessmentGrade> {
 	public boolean create(AssessmentGrade object) {
 		// TODO Auto-generated method stub
 		String sql = "INSERT INTO class_roster(registration_id, class_course_id, note_1, note_2, note_3, note_4,"
-				+ "note_5, note_6, note_7, note_8, note_9,note_10, total_cont_ass, total_final_exam, total_ass_exam, final_grade) "
-				+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				+ "note_5, note_6, note_7, note_8, note_9,note_10, total_cont_ass, total_final_exam, total_ass_exam, final_grade, letter_code) "
+				+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		
 		List<Float> notes = object.getAssessmentGrades();
 		
@@ -52,6 +52,7 @@ public class ClassRosterDAO extends DAO<AssessmentGrade> {
 			pst.setObject(i+1, object.getFinalExamMarks());
 			pst.setObject(i+2, object.getTotalAssessmentPlusExam());
 			pst.setObject(i+3, object.getFinalGrade());
+			pst.setObject(i+4, object.getLetterCode());
 			
 			rep = pst.executeUpdate()>0;
 			
@@ -76,7 +77,7 @@ public class ClassRosterDAO extends DAO<AssessmentGrade> {
 	public boolean update(AssessmentGrade object) {
 		String sql = "UPDATE class_roster set registration_id = ?, class_course_id = ?, note_1 = ?, note_2 = ?, note_3 = ?, note_4 = ?,"
 				+ "note_5 = ?, note_6 = ?, note_7 = ?, note_8 = ?, note_9 = ?,note_10 = ?, total_cont_ass = ?, total_final_exam = ?, "
-				+ "total_ass_exam = ?, final_grade = ? WHERE class_roster_id = ?";
+				+ "total_ass_exam = ?, final_grade = ?, letter_code = ? WHERE class_roster_id = ?";
 		
 		List<Float> notes = object.getAssessmentGrades();
 		
@@ -97,8 +98,9 @@ public class ClassRosterDAO extends DAO<AssessmentGrade> {
 			pst.setObject(i+1, object.getFinalExamMarks());
 			pst.setObject(i+2, object.getTotalAssessmentPlusExam());
 			pst.setObject(i+3, object.getFinalGrade());
+			pst.setObject(i+4, object.getLetterCode());
 			
-			pst.setInt(i+4, object.getId());
+			pst.setInt(i+5, object.getId());
 			
 			rep = pst.executeUpdate()>0;
 			
@@ -166,48 +168,49 @@ public class ClassRosterDAO extends DAO<AssessmentGrade> {
 					ag.setClassCourse(new ClassCourseDAO().find(res2.getInt("class_course_id")));
 					
 					List<Float> notes = new ArrayList<Float>();
-					Float totalNotes = (float) 0;
-					int count = 0;
+					
 					for(int i=1;i <= 10;i++) {
 						Float n;
 						if(res2.getString("note_"+i) == null || res2.getString("note_"+i).equalsIgnoreCase("null")) {
 							n = null;
 						}else {
-							n = res2.getFloat("note_"+i);
-							totalNotes+=n;
-							count++;		
+							n = res2.getFloat("note_"+i);		
 						}
 						notes.add(n);
 						
 					}
-					ag.setTotalContiniousAssessement((totalNotes*100)/(count*20));
 					ag.setAssessmentGrades(notes);
-					//final exam. With index 1
+					
+					if(res2.getString("total_cont_ass") == null || res2.getString("total_cont_ass").equalsIgnoreCase("null") ){
+						ag.setTotalContiniousAssessement(null);
+					} else {
+						ag.setTotalContiniousAssessement(res2.getFloat("total_cont_ass"));
+					}
+					
+					
 					if(res2.getString("total_final_exam") == null || res2.getString("total_final_exam").equalsIgnoreCase("null") ){
 						ag.setFinalExamMarks(null);
 					} else {
 						ag.setFinalExamMarks(res2.getFloat("total_final_exam"));
 					}
 					
-					if(ag.getFinalExamMarks() == null) {
+					if(res2.getString("total_ass_exam") == null || res2.getString("total_ass_exam").equalsIgnoreCase("null") ){
 						ag.setTotalAssessmentPlusExam(null);
 					} else {
-						if(ag.getTotalContiniousAssessement() == null) {
-							//if no continious assessment given
-							ag.setTotalAssessmentPlusExam(ag.getFinalExamMarks());
-						}else {
-							ag.setTotalAssessmentPlusExam((ag.getFinalExamMarks() + ag.getTotalContiniousAssessement())/2);
-						}
+						ag.setTotalAssessmentPlusExam(res2.getFloat("total_final_exam"));
 					}
 					
-					if(ag.getTotalAssessmentPlusExam() != null) {
-						GradeDAO gradeDao = new GradeDAO();
-						//TODO Make sure not to hard code this value.
-						SchoolType type = SchoolType.UNDERDRAGRUATE;
-						Grade g = gradeDao.findByNote(type.getSchoolType(), (int)(float)ag.getTotalAssessmentPlusExam());
-						ag.setFinalGrade(g.getGradePoint());
-						ag.setLetterCode(g.getLetterCode());
+					if(res2.getString("final_grade") == null || res2.getString("final_grade").equalsIgnoreCase("null") ){
+						ag.setFinalGrade(null);
+					} else {
+						ag.setFinalGrade(res2.getFloat("final_grade"));
 					}
+					if(res2.getString("letter_code") == null || res2.getString("letter_code").equalsIgnoreCase("null") ){
+						ag.setLetterCode("");
+					} else {
+						ag.setLetterCode(res2.getString("letter_code"));
+					}
+					
 					
 				} else {
 					List<Float> notes = new ArrayList<Float>();

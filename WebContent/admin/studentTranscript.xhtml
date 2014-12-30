@@ -130,7 +130,7 @@
 	        <h:panelGrid columns="2" rowClasses="align-top" columnClasses="studentInfo,schoolInfo" style="width:100%;margin-bottom:10px;">  
 	            <h:panelGrid columns="2" style="width:100%;">
 	            	<h:outputText styleClass="bold" value="Student ID" />
-		  			<h:outputText value="00-00-0110" />
+		  			<h:outputText value="#{studentTranscriptBean.selectedRegistration.student.studentId}" />
 		  			<h:outputText styleClass="bold" value="Student name" />
 		  			<h:outputText value="#{studentTranscriptBean.selectedRegistration.student.name} #{studentMarkBean.selectedRegistration.student.middleName} #{studentMarkBean.selectedRegistration.student.lastName}" />
 		  			<h:outputText styleClass="bold" value="Birth Date" />
