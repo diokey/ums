@@ -13,4 +13,15 @@ This is includes informations about students, teachers, stuff, scheduling, trans
 2. Apache tomcat 
 3. JAVA (JRE for running the app, JDK for development)
 
+### Installation
+
+#### For devs
+
+* Install JDK
+* Install Eclipse
+* Clone the project
+* Import the project in Eclipse
+
+You are ready to go
+
 
