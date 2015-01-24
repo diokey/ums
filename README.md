@@ -24,4 +24,6 @@ This is includes informations about students, teachers, stuff, scheduling, trans
 
 You are ready to go
 
+### For Users
+
 
